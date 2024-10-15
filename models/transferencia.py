@@ -1,20 +1,47 @@
-from sqlalchemy import Column, Integer, String, Date, Text, ForeignKey, Time
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+class Transferencia:
+    def __init__(self, id_transferencia=None, id_interno=None, fecha_transferencia=None, motivo=None, destino=None):
+        self._id_transferencia = id_transferencia
+        self._id_interno = id_interno
+        self._fecha_transferencia = fecha_transferencia
+        self._motivo = motivo
+        self._destino = destino
 
-class Transferencia(Base):
-    __tablename__ = 'transferencia'
-    
-    ID_Transferencia = Column(Integer, primary_key=True)
-    ID_Interno = Column(Integer, ForeignKey('interno.ID_Interno'))
-    ID_Celda_Origen = Column(Integer, ForeignKey('celda.ID_Celda'))
-    ID_Celda_Destino = Column(Integer, ForeignKey('celda.ID_Celda'))
-    Fecha = Column(Date)
-    Motivo = Column(Text)
-    
-    # Relaciones
-    interno = relationship("Interno", back_populates="transferencias")
-    celda_origen = relationship("Celda", foreign_keys=[ID_Celda_Origen])
-    celda_destino = relationship("Celda", foreign_keys=[ID_Celda_Destino])
+    # Métodos Getters
+    def get_id_transferencia(self):
+        return self._id_transferencia
+
+    def get_id_interno(self):
+        return self._id_interno
+
+    def get_fecha_transferencia(self):
+        return self._fecha_transferencia
+
+    def get_motivo(self):
+        return self._motivo
+
+    def get_destino(self):
+        return self._destino
+
+    # Métodos Setters
+    def set_id_transferencia(self, id_transferencia):
+        if isinstance(id_transferencia, int) and id_transferencia > 0:
+            self._id_transferencia = id_transferencia
+        else:
+            raise ValueError("El ID de la transferencia debe ser un entero positivo.")
+
+    def set_id_interno(self, id_interno):
+        self._id_interno = id_interno
+
+    def set_fecha_transferencia(self, fecha_transferencia):
+        self._fecha_transferencia = fecha_transferencia
+
+    def set_motivo(self, motivo):
+        self._motivo = motivo
+
+    def set_destino(self, destino):
+        self._destino = destino
+
+    # Método para representar el objeto
+    def __str__(self):
+        return f"Transferencia(id: {self._id_transferencia}, id_interno: {self._id_interno}, fecha_transferencia: {self._fecha_transferencia}, motivo: {self._motivo}, destino: {self._destino})"

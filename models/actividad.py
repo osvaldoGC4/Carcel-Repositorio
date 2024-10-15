@@ -1,18 +1,36 @@
-from sqlalchemy import Column, Integer, String, Date, Text, ForeignKey, Time
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+class Actividad:
+    def __init__(self, id_actividad=None, nombre=None, descripcion=None):
+        self._id_actividad = id_actividad
+        self._nombre = nombre
+        self._descripcion = descripcion
 
-class Actividad(Base):
-    __tablename__ = 'actividad'
-    
-    ID_Actividad = Column(Integer, primary_key=True)
-    Nombre = Column(String)
-    Tipo = Column(String)  # 'Educativa, Recreativa, Laboral'
-    Horario = Column(String)
-    
-    # Relaciones
-    internos = relationship("InternoActividad", back_populates="actividad")
+    # Métodos Getters
+    def get_id_actividad(self):
+        return self._id_actividad
+
+    def get_nombre(self):
+        return self._nombre
+
+    def get_descripcion(self):
+        return self._descripcion
+
+    # Métodos Setters
+    def set_id_actividad(self, id_actividad):
+        if isinstance(id_actividad, int) and id_actividad > 0:
+            self._id_actividad = id_actividad
+        else:
+            raise ValueError("El ID de la actividad debe ser un entero positivo.")
+
+    def set_nombre(self, nombre):
+        self._nombre = nombre
+
+    def set_descripcion(self, descripcion):
+        self._descripcion = descripcion
+
+    # Método para representar el objeto
+    def __str__(self):
+        return f"Actividad(id: {self._id_actividad}, nombre: {self._nombre}, descripcion: {self._descripcion})"
+
 
  

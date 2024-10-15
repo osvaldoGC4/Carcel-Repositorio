@@ -1,26 +1,57 @@
-from sqlalchemy import Column, Integer, String, Date, Text, ForeignKey, Time
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-from models.celda import Celda  # Asegúrate de importar Celda aquí
 
-Base = declarative_base()
+class Interno:
+    def __init__(self, id_interno=None, nombre=None, fecha_ingreso=None, estado=None, id_celda=None, fecha_liberacion=None):
+        self._id_interno = id_interno
+        self._nombre = nombre
+        self._fecha_ingreso = fecha_ingreso
+        self._estado = estado
+        self._id_celda = id_celda
+        self._fecha_liberacion = fecha_liberacion
 
-# models/interno.py
+    # Métodos Getters
+    def get_id_interno(self):
+        return self._id_interno
 
-class Interno(Base):
-    __tablename__ = 'interno'
-    
-    ID_Interno = Column(Integer, primary_key=True)
-    Nombre = Column(String)
-    Fecha_Ingreso = Column(Date)
-    Estado = Column(String)  # 'Activo, Liberado, Transferido'
-    ID_Celda = Column(Integer, ForeignKey('celda.ID_Celda'))
-    Fecha_Liberacion = Column(Date)
-    
-    # Relaciones
-    celda = relationship("Celda", back_populates="internos")  # Añadir back_populates aquí
-    condenas = relationship("Condena", back_populates="interno")
-    visitas = relationship("Visita", back_populates="interno")
-    actividades = relationship("InternoActividad", back_populates="interno")
-    transferencias = relationship("Transferencia", back_populates="interno")
-    informes = relationship("InformeDisciplina", back_populates="interno")
+    def get_nombre(self):
+        return self._nombre
+
+    def get_fecha_ingreso(self):
+        return self._fecha_ingreso
+
+    def get_estado(self):
+        return self._estado
+
+    def get_id_celda(self):
+        return self._id_celda
+
+    def get_fecha_liberacion(self):
+        return self._fecha_liberacion
+
+    # Métodos Setters con validación
+    def set_id_interno(self, id_interno):
+        if isinstance(id_interno, int) and id_interno > 0:
+            self._id_interno = id_interno
+        else:
+            raise ValueError("El ID del interno debe ser un entero positivo.")
+
+    def set_nombre(self, nombre):
+        self._nombre = nombre
+
+    def set_fecha_ingreso(self, fecha_ingreso):
+        self._fecha_ingreso = fecha_ingreso
+
+    def set_estado(self, estado):
+        if estado in ['Activo', 'Liberado', 'Transferido']:
+            self._estado = estado
+        else:
+            raise ValueError("Estado inválido. Debe ser 'Activo', 'Liberado' o 'Transferido'.")
+
+    def set_id_celda(self, id_celda):
+        self._id_celda = id_celda
+
+    def set_fecha_liberacion(self, fecha_liberacion):
+        self._fecha_liberacion = fecha_liberacion
+
+    # Método para representar el objeto
+    def __str__(self):
+        return f"Interno(id: {self._id_interno}, nombre: {self._nombre}, fecha_ingreso: {self._fecha_ingreso}, estado: {self._estado}, id_celda: {self._id_celda}, fecha_liberacion: {self._fecha_liberacion})"
