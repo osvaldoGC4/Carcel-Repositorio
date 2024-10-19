@@ -1,7 +1,5 @@
 from sqlite3 import Row
 import pyodbc
-import datetime
-import decimal
 
 class Conexion:
     string_conexion: str = """
