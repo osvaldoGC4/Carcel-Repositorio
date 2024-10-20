@@ -57,8 +57,11 @@ class Conexion:
             print("####################################################")
             print(query)
             self.cursor.execute(query)
-            self.conexion.commit()
-            return self.cursor
+            # Obtener los nombres de las columnas
+            columns = [column[0] for column in self.cursor.description]  # Obtener los nombres de las columnas
+        
+            resultado = self.cursor.fetchall()
+            return [dict(zip(columns, row)) for row in resultado]
         except pyodbc.Error as e:
             print(f"Error al ejecutar el SP: {e}")
             return []

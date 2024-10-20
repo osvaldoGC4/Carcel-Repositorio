@@ -15,7 +15,7 @@ class Crud:
         self.conexion.conectar()
         spName = "DynamicalSelect"
         response = self.conexion.execSPResult(spName, [entity, stringFieldSelect, stringFieldOtherOptions])
-        self.conexion.cerrar()
+        # Agregar print para ver lo que devuelve el SP
         return response
     
     def execUpdate(self, entity, stringFieldUpdate,  stringCondition):
@@ -28,6 +28,6 @@ class Crud:
     def execDelete(self, entity, stringCondition):
         self.conexion.conectar()
         spName = "DynamicDelete"
-        response = self.conexion.execSP(spName, [entity, stringCondition, None, None])
+        response = self.conexion.execSP(spName, [entity, stringCondition, None, None, None])
         self.conexion.cerrar()
         return response
