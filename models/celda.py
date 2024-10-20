@@ -46,4 +46,11 @@ class Celda:
         return f"Celda(id: {self._id_celda}, ubicacion: {self._ubicacion}, capacidad: {self._capacidad}, estado: {self._estado})"
 
 
-
+      # Método para convertir el objeto en un diccionario
+    def to_dict(self):
+        return {
+            'id_celda': self._id_celda,
+            'ubicacion': self._ubicacion,
+            'capacidad': self._capacidad,
+            'estado': self._estado
+        }

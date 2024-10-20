@@ -1,5 +1,6 @@
 from common.conexion import Conexion
-class crud:
+
+class Crud:
     def __init__(self) -> None:
         self.conexion = Conexion()
     

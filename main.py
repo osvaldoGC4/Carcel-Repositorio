@@ -10,5 +10,6 @@ if __name__ == '__main__':
     conexion = Conexion()
     Interno = InternoController()
     Celda = CeldaController()
-    conexion.conectar()
-    conexion.cerrar()
+    Celda.crear_celda(1, "Medellin",5,"Disponible")
+    #conexion.conectar()
+    #conexion.cerrar()
