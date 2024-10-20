@@ -38,11 +38,27 @@ class Conexion:
 
             # Ejecutar la llamada al procedimiento almacenado con los parámetros formateados
             query = f"CALL {spName} ({params_str})"
+            print("####################################################")
+            print(query)
             self.cursor.execute(query)
-
-            # Obtener el resultado
-            resultado = self.cursor.fetchall()
-            return resultado
+            self.conexion.commit()
+            return True
         except pyodbc.Error as e:
             print(f"Error al ejecutar el SP: {e}")
-            return None
+            return False
+        
+    def execSPResult(self, spName, params):
+        try:
+            # Convertir cada parámetro en string y rodear los strings con comillas simples
+            params_str = ', '.join([f"'{param}'" if isinstance(param, str) else str(param) for param in params])
+
+            # Ejecutar la llamada al procedimiento almacenado con los parámetros formateados
+            query = f"CALL {spName} ({params_str})"
+            print("####################################################")
+            print(query)
+            self.cursor.execute(query)
+            self.conexion.commit()
+            return self.cursor
+        except pyodbc.Error as e:
+            print(f"Error al ejecutar el SP: {e}")
+            return []
