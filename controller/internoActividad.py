@@ -1,5 +1,6 @@
 import json
-from models.interno_actividad import InternoActividad
+import pyodbc
+from models.internoActividad import InternoActividad
 from common.crud import Crud
 from common.conexion import Conexion
 

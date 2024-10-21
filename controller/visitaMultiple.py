@@ -1,4 +1,5 @@
 import json
+import pyodbc
 from models.visitaMultiple import VisitaMultiple
 from common.crud import Crud
 from common.conexion import Conexion

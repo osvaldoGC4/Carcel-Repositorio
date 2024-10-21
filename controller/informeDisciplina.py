@@ -1,5 +1,6 @@
 import json
-from models.informe_disciplina import InformeDisciplina
+import pyodbc
+from models.informeDisciplina import InformeDisciplina
 from common.crud import Crud
 from common.conexion import Conexion
 

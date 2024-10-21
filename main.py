@@ -7,6 +7,8 @@ from controller.transferencia import TransferenciaController
 from controller.visita import VisitaController
 from controller.visitante import VisitanteController
 from controller.visitaMultiple import VisitaMultipleController
+from controller.delito import DelitoController
+from controller.reglasN import ReglasNController
 from models.celda import Celda
 from models.interno import Interno
 from models.actividad import Actividad
@@ -15,6 +17,8 @@ from models.transferencia import Transferencia
 from models.visita import Visita
 from models.visitante import Visitante
 from models.visitaMultiple import VisitaMultiple
+from models.delito import Delito
+from models.reglasN import ReglasN
 
 def menu_principal():
     print("Bienvenido al Sistema Penitenciario")
@@ -27,6 +31,8 @@ def menu_principal():
     print("6. Visita")
     print("7. Visitante")
     print("8. Visita Múltiple")
+    print("9. Internos Por Celda")
+    print("10. Motivo Condena Interno")
     print("0. Salir")
     return input("Ingrese el número de la opción deseada: ")
 
@@ -153,6 +159,16 @@ def ejecutar_pruebas_visita_multiple(visitaMultipleController: VisitaMultipleCon
     print("############# obtener_visitas_multiple ####################")
     visitaMultipleController.obtener_visitas_multiples()
 
+def ejecutar_pruebas_interno_por_celda(reglasNcontroller: ReglasNController):
+    print("############# obtener_internos_por_celda ####################")
+    reglasNcontroller.contar_reclusos_por_celda()
+
+def ejecutar_pruebas_motivo_condena(reglasNcontroller: ReglasNController):
+    id_interno = int(input("Ingrese el ID del Interno: "))
+    id_delito = int(input("Ingrese el ID del Delito: "))
+    print("############# motivo condena ####################")
+    reglasNcontroller.obtener_condena_por_interno_y_delito(2, 2)
+
 if __name__ == '__main__':
     while True:
         opcion = menu_principal()
@@ -189,6 +205,14 @@ if __name__ == '__main__':
             conexion = Conexion()
             visitaMultipleController = VisitaMultipleController()
             ejecutar_pruebas_visita_multiple(visitaMultipleController)
+        elif opcion == '9':
+            conexion = Conexion()
+            reglasN = ReglasN()
+            ejecutar_pruebas_interno_por_celda(reglasN)
+        elif opcion == '10':
+            conexion = Conexion()
+            reglasN = ReglasN()
+            ejecutar_pruebas_motivo_condena(reglasN)
         elif opcion == '0':
             print("Saliendo del sistema...")
             break
