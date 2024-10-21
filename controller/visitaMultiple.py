@@ -1,5 +1,5 @@
 import json
-from models.visita_multiple import VisitaMultiple
+from models.visitaMultiple import VisitaMultiple
 from common.crud import Crud
 from common.conexion import Conexion
 
