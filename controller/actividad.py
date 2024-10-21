@@ -1,4 +1,5 @@
 import json
+import pyodbc
 from models.actividad import Actividad
 from common.crud import Crud
 from common.conexion import Conexion
@@ -58,4 +59,5 @@ class ActividadController:
                     Tipo=row['Tipo'],
                     Horario=row['Horario']
                 )
+                print(row)
                 actividades.append(actividad)

@@ -2,7 +2,7 @@ import json
 from models.personal import Personal
 from common.crud import Crud
 from common.conexion import Conexion
-
+import pyodbc
 class PersonalController:
     operacionCrud = None
 
@@ -59,4 +59,5 @@ class PersonalController:
                     Horario=row['Horario'],
                     Estado=row['Estado']
                 )
+                print(row)
                 personal_list.append(personal)

@@ -60,4 +60,5 @@ class InternoController:
                     ID_Celda=row['ID_Celda'],
                     Fecha_Liberacion=row['Fecha_Liberacion']
                 )
+                print(row)
                 internos.append(interno)

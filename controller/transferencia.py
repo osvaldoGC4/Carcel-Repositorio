@@ -1,4 +1,5 @@
 import json
+import pyodbc
 from models.transferencia import Transferencia
 from common.crud import Crud
 from common.conexion import Conexion
@@ -60,4 +61,5 @@ class TransferenciaController:
                     Fecha=row['Fecha'],
                     Motivo=row['Motivo']
                 )
+                print(row)
                 transferencias.append(transferencia)

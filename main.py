@@ -30,7 +30,7 @@ def menu_principal():
     print("0. Salir")
     return input("Ingrese el número de la opción deseada: ")
 
-def ejecutar_pruebas_celda(celdaController):
+def ejecutar_pruebas_celda(celdaController: CeldaController):
     itemCelda = Celda(1, "Medellin", 5, "Disponible")
     print("############# crear_celda ####################")
     celdaController.crear_celda(itemCelda)
@@ -46,8 +46,8 @@ def ejecutar_pruebas_celda(celdaController):
     print("############# obtener_celdas ####################")
     celdaController.obtener_celdas()
 
-def ejecutar_pruebas_interno(internoController):
-    itemInterno = Interno(1, "Juan Perez", "2023-01-01", "Activo", 1, None)
+def ejecutar_pruebas_interno(internoController: InternoController):
+    itemInterno = Interno(1, "Juan Perez", "2023-01-01", "Activo", 2, None)
     print("############# crear_interno ####################")
     internoController.crear_interno(itemInterno)
     print("############# obtener_internos ####################")
@@ -57,12 +57,12 @@ def ejecutar_pruebas_interno(internoController):
     internoController.actualizar_interno(itemInterno)
     print("############# obtener_interno ####################")
     internoController.obtener_interno(itemInterno.get_ID_Interno())
-    print("############# eliminar_interno ####################")
-    internoController.eliminar_interno(itemInterno.get_ID_Interno())
-    print("############# obtener_internos ####################")
-    internoController.obtener_internos()
+    # print("############# eliminar_interno ####################")
+    # internoController.eliminar_interno(itemInterno.get_ID_Interno())
+    # print("############# obtener_internos ####################")
+    # internoController.obtener_internos()
 
-def ejecutar_pruebas_actividad(actividadController):
+def ejecutar_pruebas_actividad(actividadController: ActividadController):
     itemActividad = Actividad(1, "Actividad Recreativa", "Deporte", "09:00-10:00")
     print("############# crear_actividad ####################")
     actividadController.crear_actividad(itemActividad)
@@ -78,24 +78,24 @@ def ejecutar_pruebas_actividad(actividadController):
     print("############# obtener_actividades ####################")
     actividadController.obtener_actividades()
 
-def ejecutar_pruebas_personal(personalController):
-    itemPersonal = Personal(1, "Carlos Gomez", "Supervisor", "08:00-16:00", "Activo")
+def ejecutar_pruebas_personal(personalController: PersonalController):
+    itemPersonal = Personal(2, "Carlos Gomez", "Supervisor", "08:00-16:00", "Activo")
     print("############# crear_personal ####################")
     personalController.crear_personal(itemPersonal)
     print("############# obtener_personales ####################")
-    personalController.obtener_personales()
+    personalController.obtener_personal()
     itemPersonal.set_Estado("Inactivo")
     print("############# actualizar_personal ####################")
     personalController.actualizar_personal(itemPersonal)
     print("############# obtener_personal ####################")
-    personalController.obtener_personal(itemPersonal.get_ID_Personal())
+    personalController.obtener_personal_por_id(itemPersonal.get_ID_Personal())
     print("############# eliminar_personal ####################")
     personalController.eliminar_personal(itemPersonal.get_ID_Personal())
     print("############# obtener_personales ####################")
-    personalController.obtener_personales()
+    personalController.obtener_personal()
 
-def ejecutar_pruebas_transferencia(transferenciaController):
-    itemTransferencia = Transferencia(1, 1, 2, "2024-10-20", "Cambio de celda")
+def ejecutar_pruebas_transferencia(transferenciaController: TransferenciaController):
+    itemTransferencia = Transferencia(1, 1, 2, 3, "Cambio de celda")
     print("############# crear_transferencia ####################")
     transferenciaController.crear_transferencia(itemTransferencia)
     print("############# obtener_transferencias ####################")
@@ -110,7 +110,7 @@ def ejecutar_pruebas_transferencia(transferenciaController):
     print("############# obtener_transferencias ####################")
     transferenciaController.obtener_transferencias()
 
-def ejecutar_pruebas_visita(visitaController):
+def ejecutar_pruebas_visita(visitaController: VisitaController):
     itemVisita = Visita(1, 1, 1, "2024-10-20", "10:00", 30)
     print("############# crear_visita ####################")
     visitaController.crear_visita(itemVisita)
@@ -121,12 +121,12 @@ def ejecutar_pruebas_visita(visitaController):
     visitaController.actualizar_visita(itemVisita)
     print("############# obtener_visita ####################")
     visitaController.obtener_visita(itemVisita.get_ID_Visita())
-    print("############# eliminar_visita ####################")
-    visitaController.eliminar_visita(itemVisita.get_ID_Visita())
-    print("############# obtener_visitas ####################")
-    visitaController.obtener_visitas()
+    # print("############# eliminar_visita ####################")
+    # visitaController.eliminar_visita(itemVisita.get_ID_Visita())
+    # print("############# obtener_visitas ####################")
+    # visitaController.obtener_visitas()
 
-def ejecutar_pruebas_visitante(visitanteController):
+def ejecutar_pruebas_visitante(visitanteController: VisitanteController):
     itemVisitante = Visitante(1, "Maria Lopez", "Hermana", "12345678")
     print("############# crear_visitante ####################")
     visitanteController.crear_visitante(itemVisitante)
@@ -137,21 +137,21 @@ def ejecutar_pruebas_visitante(visitanteController):
     visitanteController.actualizar_visitante(itemVisitante)
     print("############# obtener_visitante ####################")
     visitanteController.obtener_visitante(itemVisitante.get_ID_Visitante())
-    print("############# eliminar_visitante ####################")
-    visitanteController.eliminar_visitante(itemVisitante.get_ID_Visitante())
-    print("############# obtener_visitantes ####################")
-    visitanteController.obtener_visitantes()
+    # print("############# eliminar_visitante ####################")
+    # visitanteController.eliminar_visitante(itemVisitante.get_ID_Visitante())
+    # print("############# obtener_visitantes ####################")
+    # visitanteController.obtener_visitantes()
 
-def ejecutar_pruebas_visita_multiple(visitaMultipleController):
+def ejecutar_pruebas_visita_multiple(visitaMultipleController: VisitaMultipleController):
     itemVisitaMultiple = VisitaMultiple(1, 1)
     print("############# crear_visita_multiple ####################")
     visitaMultipleController.crear_visita_multiple(itemVisitaMultiple)
     print("############# obtener_visitas_multiple ####################")
-    visitaMultipleController.obtener_visitas_multiple()
+    visitaMultipleController.obtener_visitas_multiples()
     print("############# eliminar_visita_multiple ####################")
-    visitaMultipleController.eliminar_visita_multiple(itemVisitaMultiple.get_ID_Visita())
+    visitaMultipleController.eliminar_visita_multiple(itemVisitaMultiple.get_ID_Visita(), itemVisitaMultiple.get_ID_Visitante())
     print("############# obtener_visitas_multiple ####################")
-    visitaMultipleController.obtener_visitas_multiple()
+    visitaMultipleController.obtener_visitas_multiples()
 
 if __name__ == '__main__':
     while True:

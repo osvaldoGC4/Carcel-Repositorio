@@ -1,4 +1,5 @@
 import json
+import pyodbc
 from models.visita import Visita
 from common.crud import Crud
 from common.conexion import Conexion
@@ -60,4 +61,5 @@ class VisitaController:
                     Hora_Inicio=row['Hora_Inicio'],
                     Duracion=row['Duracion']
                 )
+                print(row)
                 visitas.append(visita)

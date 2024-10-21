@@ -20,7 +20,7 @@ class Conexion:
         try:
             self.conexion = pyodbc.connect(self.string_conexion)
             self.cursor = self.conexion.cursor()
-            print("Conexión exitosa a la base de datos.")
+            # print("Conexión exitosa a la base de datos.")
         except pyodbc.Error as e:
             print(f"Error al conectar a la base de datos: {e}")
 
@@ -29,7 +29,7 @@ class Conexion:
             self.cursor.close()
         if self.conexion:
             self.conexion.close()
-            print("Conexión cerrada.")
+            # print("Conexión cerrada.")
 
     def execSP(self, spName, params):
         try:
@@ -43,7 +43,7 @@ class Conexion:
 
             # Construir la consulta
             query = f"CALL {spName} ({params_str})"
-            print("####################################################")
+            # print("####################################################")
             print(query)
 
             # Ejecutar la consulta
@@ -73,7 +73,7 @@ class Conexion:
 
             # Ejecutar la llamada al procedimiento almacenado con los parámetros formateados
             query = f"CALL {spName} ({params_str})"
-            print("####################################################")
+            # print("####################################################")
             print(query)
             self.cursor.execute(query)
             # Obtener los nombres de las columnas

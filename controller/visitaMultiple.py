@@ -58,4 +58,5 @@ class VisitaMultipleController:
                     ID_Visita=row['ID_Visita'],
                     ID_Visitante=row['ID_Visitante']
                 )
+                print(row)
                 relaciones.append(visita_multiple)

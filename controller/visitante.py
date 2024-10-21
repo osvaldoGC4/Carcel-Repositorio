@@ -1,4 +1,5 @@
 import json
+import pyodbc
 from models.visitante import Visitante
 from common.crud import Crud
 from common.conexion import Conexion
@@ -58,4 +59,5 @@ class VisitanteController:
                     Relacion=row['Relacion'],
                     Documento=row['Documento']
                 )
+                print(row)
                 visitantes.append(visitante)
