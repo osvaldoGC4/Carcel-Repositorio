@@ -33,19 +33,38 @@ class Conexion:
 
     def execSP(self, spName, params):
         try:
-            # Convertir cada parámetro en string y rodear los strings con comillas simples
-            params_str = ', '.join([f"'{param}'" if isinstance(param, str) else str(param) for param in params])
+            # Crear un nuevo cursor
+            cursor = self.conexion.cursor()
 
-            # Ejecutar la llamada al procedimiento almacenado con los parámetros formateados
+            # Convertir parámetros
+            params_str = ', '.join(
+                [f"'{param}'" if isinstance(param, str) else 'NULL' if param is None else str(param) for param in params]
+            )
+
+            # Construir la consulta
             query = f"CALL {spName} ({params_str})"
             print("####################################################")
             print(query)
-            self.cursor.execute(query)
+
+            # Ejecutar la consulta
+            cursor.execute(query)
+
+            # Si el procedimiento no devuelve resultados, solo hacer commit
+            if cursor.description is not None:  # Esto indica que hay resultados a procesar
+                results = cursor.fetchall()
+                for row in results:
+                    print(row)  # Puedes procesar los resultados si lo deseas
+            else:
+                print("No se devolvieron resultados. Consulta ejecutada exitosamente.")
+
             self.conexion.commit()
             return True
         except pyodbc.Error as e:
             print(f"Error al ejecutar el SP: {e}")
             return False
+        finally:
+            cursor.close()  # Asegúrate de cerrar el cursor
+
         
     def execSPResult(self, spName, params):
         try:

@@ -18,8 +18,6 @@ if __name__ == '__main__':
     celdaController.obtener_celda(itemCelda.get_ID_Celda())
     print("############# eliminar_celda ####################")
     celdaController.eliminar_celda(itemCelda.get_ID_Celda())
-    #print("############# obtener_celdas ####################")
-    #celdaController.obtener_celdas()
+    print("############# obtener_celdas ####################")
+    celdaController.obtener_celdas()
     
-    #conexion.conectar()
-    #conexion.cerrar()
