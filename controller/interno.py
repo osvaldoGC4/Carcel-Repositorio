@@ -3,12 +3,14 @@ import pyodbc
 from models.interno import Interno
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class InternoController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     def crear_interno(self, nuevo_interno: Interno):
         interno_dict = nuevo_interno.to_dict()
@@ -24,7 +26,7 @@ class InternoController:
         try:
             print("Ejecutando la consulta para obtener internos...")
             respuesta = self.operacionCrud.execSelect('interno', '*', '')
-            self.mostrar_internos(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -35,7 +37,7 @@ class InternoController:
         conexion.conectar()
         try:
             respuesta = self.operacionCrud.execSelect('interno', '*', '{"where": "ID_Interno = ' + str(ID_Interno) + '"}')
-            self.mostrar_internos(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -49,17 +51,4 @@ class InternoController:
     def eliminar_interno(self, ID_Interno):
         self.operacionCrud.execDelete('interno', f'ID_Interno = {ID_Interno}')
 
-    def mostrar_internos(self, respuesta):
-        internos = []
-        if respuesta:
-            for row in respuesta:
-                interno = Interno(
-                    ID_Interno=row['ID_Interno'],
-                    Nombre=row['Nombre'],
-                    Fecha_Ingreso=row['Fecha_Ingreso'],
-                    Estado=row['Estado'],
-                    ID_Celda=row['ID_Celda'],
-                    Fecha_Liberacion=row['Fecha_Liberacion']
-                )
-                print(row)
-                internos.append(interno)
+    

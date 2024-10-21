@@ -3,12 +3,14 @@ import pyodbc
 from models.transferencia import Transferencia
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class TransferenciaController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     def crear_transferencia(self, nueva_transferencia: Transferencia):
         transferencia_dict = nueva_transferencia.to_dict()
@@ -24,7 +26,7 @@ class TransferenciaController:
         try:
             print("Ejecutando la consulta para obtener transferencias...")
             respuesta = self.operacionCrud.execSelect('transferencia', '*', '')
-            self.mostrar_transferencias(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -35,7 +37,7 @@ class TransferenciaController:
         conexion.conectar()
         try:
             respuesta = self.operacionCrud.execSelect('transferencia', '*', '{"where": "ID_Transferencia = ' + str(ID_Transferencia) + '"}')
-            self.mostrar_transferencias(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -49,17 +51,3 @@ class TransferenciaController:
     def eliminar_transferencia(self, ID_Transferencia):
         self.operacionCrud.execDelete('transferencia', f'ID_Transferencia = {ID_Transferencia}')
 
-    def mostrar_transferencias(self, respuesta):
-        transferencias = []
-        if respuesta:
-            for row in respuesta:
-                transferencia = Transferencia(
-                    ID_Transferencia=row['ID_Transferencia'],
-                    ID_Interno=row['ID_Interno'],
-                    ID_Celda_Origen=row['ID_Celda_Origen'],
-                    ID_Celda_Destino=row['ID_Celda_Destino'],
-                    Fecha=row['Fecha'],
-                    Motivo=row['Motivo']
-                )
-                print(row)
-                transferencias.append(transferencia)

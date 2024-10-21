@@ -3,12 +3,14 @@ import pyodbc
 from models.actividad import Actividad
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class ActividadController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     def crear_actividad(self, nueva_actividad: Actividad):
         actividad_dict = nueva_actividad.to_dict()
@@ -24,7 +26,7 @@ class ActividadController:
         try:
             print("Ejecutando la consulta para obtener actividades...")
             respuesta = self.operacionCrud.execSelect('actividad', '*', '')
-            self.mostrar_actividades(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -35,7 +37,7 @@ class ActividadController:
         conexion.conectar()
         try:
             respuesta = self.operacionCrud.execSelect('actividad', '*', '{"where": "ID_Actividad = ' + str(ID_Actividad) + '"}')
-            self.mostrar_actividades(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -49,15 +51,4 @@ class ActividadController:
     def eliminar_actividad(self, ID_Actividad):
         self.operacionCrud.execDelete('actividad', f'ID_Actividad = {ID_Actividad}')
 
-    def mostrar_actividades(self, respuesta):
-        actividades = []
-        if respuesta:
-            for row in respuesta:
-                actividad = Actividad(
-                    ID_Actividad=row['ID_Actividad'],
-                    Nombre=row['Nombre'],
-                    Tipo=row['Tipo'],
-                    Horario=row['Horario']
-                )
-                print(row)
-                actividades.append(actividad)
+   

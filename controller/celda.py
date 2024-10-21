@@ -3,12 +3,14 @@ import pyodbc
 from models.celda import Celda
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class CeldaController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     # Crear un nuevo registro de Celda
     def crear_celda(self, nueva_celda: Celda):
@@ -31,7 +33,7 @@ class CeldaController:
             print("Ejecutando la consulta para obtener celdas...")
             respuesta = self.operacionCrud.execSelect('celda', '*', '')
 
-            self.mostrar_celdas(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
 
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
@@ -49,7 +51,7 @@ class CeldaController:
             print("Ejecutando la consulta para obtener celdas...")
             respuesta = self.operacionCrud.execSelect('celda', '*', '{"where": "ID_Celda = '+ str(ID_Celda) +'"}')
 
-            self.mostrar_celdas(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
 
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
@@ -65,18 +67,3 @@ class CeldaController:
 
     def eliminar_celda(self, ID_Celda):
         self.operacionCrud.execDelete('celda', f'ID_Celda = {ID_Celda}')
-
-    def mostrar_celdas(self, respuesta):
-
-        # Procesar los resultados y llenarlos en objetos Celda
-            celdas = []
-            if respuesta:  # Verificar si 'response' tiene datos
-                for row in respuesta:
-                    print(f"Fila obtenida: {row}")
-                    celda = Celda(
-                        ID_Celda=row['ID_Celda'],
-                        Ubicacion=row['Ubicacion'],
-                        Capacidad=row['Capacidad'],
-                        Estado=row['Estado']
-                    )
-                    celdas.append(celda)

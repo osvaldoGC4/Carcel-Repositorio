@@ -3,12 +3,14 @@ import pyodbc
 from models.delito import Delito
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class DelitoController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     def crear_delito(self, nuevo_delito: Delito):
         delito_dict = nuevo_delito.to_dict()
@@ -24,7 +26,7 @@ class DelitoController:
         try:
             print("Ejecutando la consulta para obtener delitos...")
             respuesta = self.operacionCrud.execSelect('delito', '*', '')
-            self.mostrar_delitos(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -35,7 +37,7 @@ class DelitoController:
         conexion.conectar()
         try:
             respuesta = self.operacionCrud.execSelect('delito', '*', '{"where": "ID_Delito = ' + str(ID_Delito) + '"}')
-            self.mostrar_delitos(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -48,14 +50,3 @@ class DelitoController:
 
     def eliminar_delito(self, ID_Delito):
         self.operacionCrud.execDelete('delito', f'ID_Delito = {ID_Delito}')
-
-    def mostrar_delitos(self, respuesta):
-        delitos = []
-        if respuesta:
-            for row in respuesta:
-                delito = Delito(
-                    ID_Delito=row['ID_Delito'],
-                    Tipo=row['Tipo'],
-                    Descripcion=row['Descripcion']
-                )
-                delitos.append(delito)

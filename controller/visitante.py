@@ -3,12 +3,14 @@ import pyodbc
 from models.visitante import Visitante
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class VisitanteController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     def crear_visitante(self, nuevo_visitante: Visitante):
         visitante_dict = nuevo_visitante.to_dict()
@@ -24,7 +26,7 @@ class VisitanteController:
         try:
             print("Ejecutando la consulta para obtener visitantes...")
             respuesta = self.operacionCrud.execSelect('visitante', '*', '')
-            self.mostrar_visitantes(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -35,7 +37,7 @@ class VisitanteController:
         conexion.conectar()
         try:
             respuesta = self.operacionCrud.execSelect('visitante', '*', '{"where": "ID_Visitante = ' + str(ID_Visitante) + '"}')
-            self.mostrar_visitantes(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -48,16 +50,3 @@ class VisitanteController:
 
     def eliminar_visitante(self, ID_Visitante):
         self.operacionCrud.execDelete('visitante', f'ID_Visitante = {ID_Visitante}')
-
-    def mostrar_visitantes(self, respuesta):
-        visitantes = []
-        if respuesta:
-            for row in respuesta:
-                visitante = Visitante(
-                    ID_Visitante=row['ID_Visitante'],
-                    Nombre=row['Nombre'],
-                    Relacion=row['Relacion'],
-                    Documento=row['Documento']
-                )
-                print(row)
-                visitantes.append(visitante)

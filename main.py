@@ -18,7 +18,7 @@ from models.visita import Visita
 from models.visitante import Visitante
 from models.visitaMultiple import VisitaMultiple
 from models.delito import Delito
-from models.reglasN import ReglasN
+
 
 def menu_principal():
     print("Bienvenido al Sistema Penitenciario")
@@ -37,7 +37,7 @@ def menu_principal():
     return input("Ingrese el número de la opción deseada: ")
 
 def ejecutar_pruebas_celda(celdaController: CeldaController):
-    itemCelda = Celda(1, "Medellin", 5, "Disponible")
+    itemCelda = Celda(20, "Prueba", 25, "Disponible")
     print("############# crear_celda ####################")
     celdaController.crear_celda(itemCelda)
     print("############# obtener_celdas ####################")
@@ -53,7 +53,7 @@ def ejecutar_pruebas_celda(celdaController: CeldaController):
     celdaController.obtener_celdas()
 
 def ejecutar_pruebas_interno(internoController: InternoController):
-    itemInterno = Interno(1, "Juan Perez", "2023-01-01", "Activo", 2, None)
+    itemInterno = Interno(20, "Andrei", "2023-01-01", "Activo", 2, None)
     print("############# crear_interno ####################")
     internoController.crear_interno(itemInterno)
     print("############# obtener_internos ####################")
@@ -63,13 +63,13 @@ def ejecutar_pruebas_interno(internoController: InternoController):
     internoController.actualizar_interno(itemInterno)
     print("############# obtener_interno ####################")
     internoController.obtener_interno(itemInterno.get_ID_Interno())
-    # print("############# eliminar_interno ####################")
-    # internoController.eliminar_interno(itemInterno.get_ID_Interno())
-    # print("############# obtener_internos ####################")
-    # internoController.obtener_internos()
+    print("############# eliminar_interno ####################")
+    internoController.eliminar_interno(itemInterno.get_ID_Interno())
+    print("############# obtener_internos ####################")
+    internoController.obtener_internos()
 
 def ejecutar_pruebas_actividad(actividadController: ActividadController):
-    itemActividad = Actividad(1, "Actividad Recreativa", "Deporte", "09:00-10:00")
+    itemActividad = Actividad(20, "artesania", "Deporte", "09:00-10:00")
     print("############# crear_actividad ####################")
     actividadController.crear_actividad(itemActividad)
     print("############# obtener_actividades ####################")
@@ -85,7 +85,7 @@ def ejecutar_pruebas_actividad(actividadController: ActividadController):
     actividadController.obtener_actividades()
 
 def ejecutar_pruebas_personal(personalController: PersonalController):
-    itemPersonal = Personal(2, "Carlos Gomez", "Supervisor", "08:00-16:00", "Activo")
+    itemPersonal = Personal(20, "Enrique de jesus", "Supervisor", "07:00-16:00", "Activo")
     print("############# crear_personal ####################")
     personalController.crear_personal(itemPersonal)
     print("############# obtener_personales ####################")
@@ -101,7 +101,7 @@ def ejecutar_pruebas_personal(personalController: PersonalController):
     personalController.obtener_personal()
 
 def ejecutar_pruebas_transferencia(transferenciaController: TransferenciaController):
-    itemTransferencia = Transferencia(1, 1, 2, 3, "Cambio de celda")
+    itemTransferencia = Transferencia(20, 1, 2, 3, "Cambio de celda")
     print("############# crear_transferencia ####################")
     transferenciaController.crear_transferencia(itemTransferencia)
     print("############# obtener_transferencias ####################")
@@ -117,7 +117,7 @@ def ejecutar_pruebas_transferencia(transferenciaController: TransferenciaControl
     transferenciaController.obtener_transferencias()
 
 def ejecutar_pruebas_visita(visitaController: VisitaController):
-    itemVisita = Visita(1, 1, 1, "2024-10-20", "10:00", 30)
+    itemVisita = Visita(20, 1, 1, "2024-9-30", "10:00", 30)
     print("############# crear_visita ####################")
     visitaController.crear_visita(itemVisita)
     print("############# obtener_visitas ####################")
@@ -127,13 +127,13 @@ def ejecutar_pruebas_visita(visitaController: VisitaController):
     visitaController.actualizar_visita(itemVisita)
     print("############# obtener_visita ####################")
     visitaController.obtener_visita(itemVisita.get_ID_Visita())
-    # print("############# eliminar_visita ####################")
-    # visitaController.eliminar_visita(itemVisita.get_ID_Visita())
-    # print("############# obtener_visitas ####################")
-    # visitaController.obtener_visitas()
+    print("############# eliminar_visita ####################")
+    visitaController.eliminar_visita(itemVisita.get_ID_Visita())
+    print("############# obtener_visitas ####################")
+    visitaController.obtener_visitas()
 
 def ejecutar_pruebas_visitante(visitanteController: VisitanteController):
-    itemVisitante = Visitante(1, "Maria Lopez", "Hermana", "12345678")
+    itemVisitante = Visitante(20, "Maria Lopez", "Hermana", "12345678")
     print("############# crear_visitante ####################")
     visitanteController.crear_visitante(itemVisitante)
     print("############# obtener_visitantes ####################")
@@ -143,10 +143,10 @@ def ejecutar_pruebas_visitante(visitanteController: VisitanteController):
     visitanteController.actualizar_visitante(itemVisitante)
     print("############# obtener_visitante ####################")
     visitanteController.obtener_visitante(itemVisitante.get_ID_Visitante())
-    # print("############# eliminar_visitante ####################")
-    # visitanteController.eliminar_visitante(itemVisitante.get_ID_Visitante())
-    # print("############# obtener_visitantes ####################")
-    # visitanteController.obtener_visitantes()
+    print("############# eliminar_visitante ####################")
+    visitanteController.eliminar_visitante(itemVisitante.get_ID_Visitante())
+    print("############# obtener_visitantes ####################")
+    visitanteController.obtener_visitantes()
 
 def ejecutar_pruebas_visita_multiple(visitaMultipleController: VisitaMultipleController):
     itemVisitaMultiple = VisitaMultiple(1, 1)
@@ -167,7 +167,7 @@ def ejecutar_pruebas_motivo_condena(reglasNcontroller: ReglasNController):
     id_interno = int(input("Ingrese el ID del Interno: "))
     id_delito = int(input("Ingrese el ID del Delito: "))
     print("############# motivo condena ####################")
-    reglasNcontroller.obtener_condena_por_interno_y_delito(2, 2)
+    reglasNcontroller.obtener_condena_por_interno_y_delito(id_interno, id_delito)
 
 if __name__ == '__main__':
     while True:
@@ -207,12 +207,12 @@ if __name__ == '__main__':
             ejecutar_pruebas_visita_multiple(visitaMultipleController)
         elif opcion == '9':
             conexion = Conexion()
-            reglasN = ReglasN()
-            ejecutar_pruebas_interno_por_celda(reglasN)
+            reglasNController = ReglasNController()
+            ejecutar_pruebas_interno_por_celda(reglasNController)
         elif opcion == '10':
             conexion = Conexion()
-            reglasN = ReglasN()
-            ejecutar_pruebas_motivo_condena(reglasN)
+            reglasNController = ReglasNController()
+            ejecutar_pruebas_motivo_condena(reglasNController)
         elif opcion == '0':
             print("Saliendo del sistema...")
             break
