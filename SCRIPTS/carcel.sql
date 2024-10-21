@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-10-2024 a las 22:47:35
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Tiempo de generación: 21-10-2024 a las 03:25:56
+-- Versión del servidor: 10.4.19-MariaDB
+-- Versión de PHP: 8.0.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalSelect` (IN `tableName` VARCHAR(255), IN `columnList` VARCHAR(255), IN `options` JSON)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalSelect` (IN `tableName` VARCHAR(255), IN `columnList` VARCHAR(255), IN `options` JSON)  BEGIN
     DECLARE sqlStatement TEXT;
     DECLARE whereClause TEXT DEFAULT '';
     DECLARE orderByClause TEXT DEFAULT '';
@@ -62,7 +62,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalSelect` (IN `tableName` VA
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalUpdate` (IN `tableName` VARCHAR(255), IN `columnsAndValues` JSON, IN `options` JSON)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalUpdate` (IN `tableName` VARCHAR(255), IN `columnsAndValues` JSON, IN `options` JSON)  BEGIN
     DECLARE sqlStatement TEXT;
     DECLARE setClause TEXT DEFAULT '';
     DECLARE whereClause TEXT DEFAULT '';
@@ -124,7 +124,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalUpdate` (IN `tableName` VA
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicDelete` (IN `tableName` VARCHAR(255), IN `whereCondition` TEXT, IN `orderBy` TEXT, IN `groupBy` TEXT, IN `havingCondition` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicDelete` (IN `tableName` VARCHAR(255), IN `whereCondition` TEXT, IN `orderBy` TEXT, IN `groupBy` TEXT, IN `havingCondition` TEXT)  BEGIN
     DECLARE sqlStatement TEXT;  -- Declaración SQL para construir la consulta
     DECLARE errMsg TEXT;        -- Mensaje de error
 
@@ -163,11 +163,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicDelete` (IN `tableName` VARC
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    -- Mensaje de éxito
-    SELECT CONCAT('Consulta ejecutada: ', sqlStatement) AS Query_Executed;
+    -- Opción de agregar un mensaje de éxito
+    -- SELECT CONCAT('Consulta ejecutada: ', sqlStatement) AS Query_Executed;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicInsert` (IN `tableName` VARCHAR(255), IN `jsonData` JSON)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicInsert` (IN `tableName` VARCHAR(255), IN `jsonData` JSON)  BEGIN
     DECLARE sqlStatement TEXT;
     DECLARE columns TEXT;
     DECLARE valueList TEXT;  -- Cambié el nombre de la variable
@@ -229,7 +229,7 @@ CREATE TABLE `actividad` (
   `Nombre` varchar(255) DEFAULT NULL,
   `Tipo` varchar(255) DEFAULT NULL COMMENT 'Educativa, Recreativa, Laboral',
   `Horario` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -242,16 +242,13 @@ CREATE TABLE `celda` (
   `Ubicacion` varchar(255) DEFAULT NULL,
   `Capacidad` int(11) DEFAULT NULL,
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Ocupada, Disponible'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `celda`
 --
 
 INSERT INTO `celda` (`ID_Celda`, `Ubicacion`, `Capacidad`, `Estado`) VALUES
-(1, 'Medellin2', NULL, NULL),
-(2, 'Medellin2', 5, 'Disponible'),
-(3, 'Bello', 10, 'Disponible'),
 (4, 'Aranjuez', 100, 'Disponible');
 
 -- --------------------------------------------------------
@@ -268,7 +265,7 @@ CREATE TABLE `condena` (
   `Duracion` int(11) DEFAULT NULL COMMENT 'En meses',
   `Tipo` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Permanente, Temporal',
   `ID_Personal` int(11) DEFAULT NULL COMMENT 'Responsable de la condena'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -280,7 +277,7 @@ CREATE TABLE `delito` (
   `ID_Delito` int(11) NOT NULL,
   `Tipo` varchar(255) DEFAULT NULL,
   `Descripcion` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `delito`
@@ -303,7 +300,7 @@ CREATE TABLE `informe_disciplina` (
   `Fecha` date DEFAULT NULL,
   `Descripcion` text DEFAULT NULL,
   `Sancion` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -318,7 +315,7 @@ CREATE TABLE `interno` (
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Activo, Liberado, Transferido',
   `ID_Celda` int(11) DEFAULT NULL,
   `Fecha_Liberacion` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -329,7 +326,7 @@ CREATE TABLE `interno` (
 CREATE TABLE `interno_actividad` (
   `ID_Interno` int(11) NOT NULL,
   `ID_Actividad` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -343,7 +340,7 @@ CREATE TABLE `personal` (
   `Rol` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Guardia, Administrador',
   `Horario` varchar(255) DEFAULT NULL,
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Activo, Inactivo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -358,7 +355,7 @@ CREATE TABLE `transferencia` (
   `ID_Celda_Destino` int(11) DEFAULT NULL,
   `Fecha` date DEFAULT NULL,
   `Motivo` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -373,7 +370,7 @@ CREATE TABLE `visita` (
   `Fecha` date DEFAULT NULL,
   `Hora_Inicio` time DEFAULT NULL,
   `Duracion` int(11) DEFAULT NULL COMMENT 'En minutos'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -386,7 +383,7 @@ CREATE TABLE `visitante` (
   `Nombre` varchar(255) DEFAULT NULL,
   `Relacion` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Familiar, Abogado',
   `Documento` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -397,7 +394,7 @@ CREATE TABLE `visitante` (
 CREATE TABLE `visita_multiple` (
   `ID_Visita` int(11) NOT NULL,
   `ID_Visitante` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Índices para tablas volcadas
