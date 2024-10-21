@@ -84,3 +84,6 @@ class Conexion:
         except pyodbc.Error as e:
             print(f"Error al ejecutar el SP: {e}")
             return []
+        
+    
+    

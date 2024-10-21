@@ -1,13 +1,16 @@
 import json
-from models.interno_actividad import InternoActividad
+import pyodbc
+from models.internoActividad import InternoActividad
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class InternoActividadController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     def crear_interno_actividad(self, nuevo_interno_actividad: InternoActividad):
         interno_actividad_dict = nuevo_interno_actividad.to_dict()
@@ -23,7 +26,7 @@ class InternoActividadController:
         try:
             print("Ejecutando la consulta para obtener relaciones Interno-Actividad...")
             respuesta = self.operacionCrud.execSelect('interno_actividad', '*', '')
-            self.mostrar_interno_actividades(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -35,7 +38,7 @@ class InternoActividadController:
         try:
             where_clause = f'ID_Interno = {ID_Interno} AND ID_Actividad = {ID_Actividad}'
             respuesta = self.operacionCrud.execSelect('interno_actividad', '*', f'{{"where": "{where_clause}"}}')
-            self.mostrar_interno_actividades(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -50,12 +53,3 @@ class InternoActividadController:
         where_clause = f'ID_Interno = {ID_Interno} AND ID_Actividad = {ID_Actividad}'
         self.operacionCrud.execDelete('interno_actividad', where_clause)
 
-    def mostrar_interno_actividades(self, respuesta):
-        relaciones = []
-        if respuesta:
-            for row in respuesta:
-                interno_actividad = InternoActividad(
-                    ID_Interno=row['ID_Interno'],
-                    ID_Actividad=row['ID_Actividad']
-                )
-                relaciones.append(interno_actividad)

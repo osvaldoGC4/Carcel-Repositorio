@@ -3,12 +3,14 @@ import pyodbc
 from models.visita import Visita
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class VisitaController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     def crear_visita(self, nueva_visita: Visita):
         visita_dict = nueva_visita.to_dict()
@@ -24,7 +26,7 @@ class VisitaController:
         try:
             print("Ejecutando la consulta para obtener visitas...")
             respuesta = self.operacionCrud.execSelect('visita', '*', '')
-            self.mostrar_visitas(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -35,7 +37,7 @@ class VisitaController:
         conexion.conectar()
         try:
             respuesta = self.operacionCrud.execSelect('visita', '*', '{"where": "ID_Visita = ' + str(ID_Visita) + '"}')
-            self.mostrar_visitas(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -49,17 +51,3 @@ class VisitaController:
     def eliminar_visita(self, ID_Visita):
         self.operacionCrud.execDelete('visita', f'ID_Visita = {ID_Visita}')
 
-    def mostrar_visitas(self, respuesta):
-        visitas = []
-        if respuesta:
-            for row in respuesta:
-                visita = Visita(
-                    ID_Visita=row['ID_Visita'],
-                    ID_Interno=row['ID_Interno'],
-                    ID_Visitante=row['ID_Visitante'],
-                    Fecha=row['Fecha'],
-                    Hora_Inicio=row['Hora_Inicio'],
-                    Duracion=row['Duracion']
-                )
-                print(row)
-                visitas.append(visita)

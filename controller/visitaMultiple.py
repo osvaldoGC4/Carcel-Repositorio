@@ -1,13 +1,16 @@
 import json
+import pyodbc
 from models.visitaMultiple import VisitaMultiple
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class VisitaMultipleController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     def crear_visita_multiple(self, nueva_visita_multiple: VisitaMultiple):
         visita_multiple_dict = nueva_visita_multiple.to_dict()
@@ -23,7 +26,7 @@ class VisitaMultipleController:
         try:
             print("Ejecutando la consulta para obtener visitas múltiples...")
             respuesta = self.operacionCrud.execSelect('visita_multiple', '*', '')
-            self.mostrar_visitas_multiples(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -35,7 +38,7 @@ class VisitaMultipleController:
         try:
             where_clause = f'ID_Visita = {ID_Visita} AND ID_Visitante = {ID_Visitante}'
             respuesta = self.operacionCrud.execSelect('visita_multiple', '*', f'{{"where": "{where_clause}"}}')
-            self.mostrar_visitas_multiples(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -50,13 +53,3 @@ class VisitaMultipleController:
         where_clause = f'ID_Visita = {ID_Visita} AND ID_Visitante = {ID_Visitante}'
         self.operacionCrud.execDelete('visita_multiple', where_clause)
 
-    def mostrar_visitas_multiples(self, respuesta):
-        relaciones = []
-        if respuesta:
-            for row in respuesta:
-                visita_multiple = VisitaMultiple(
-                    ID_Visita=row['ID_Visita'],
-                    ID_Visitante=row['ID_Visitante']
-                )
-                print(row)
-                relaciones.append(visita_multiple)

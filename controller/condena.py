@@ -1,13 +1,16 @@
 import json
+import pyodbc
 from models.condena import Condena
 from common.crud import Crud
 from common.conexion import Conexion
+from common.utiles import Utiles
 
 class CondenaController:
     operacionCrud = None
 
     def __init__(self):
         self.operacionCrud = Crud()
+        self.show = Utiles()
 
     def crear_condena(self, nueva_condena: Condena):
         condena_dict = nueva_condena.to_dict()
@@ -23,7 +26,7 @@ class CondenaController:
         try:
             print("Ejecutando la consulta para obtener condenas...")
             respuesta = self.operacionCrud.execSelect('condena', '*', '')
-            self.mostrar_condenas(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -34,7 +37,7 @@ class CondenaController:
         conexion.conectar()
         try:
             respuesta = self.operacionCrud.execSelect('condena', '*', '{"where": "ID_Condena = ' + str(ID_Condena) + '"}')
-            self.mostrar_condenas(respuesta)
+            self.show.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -47,18 +50,3 @@ class CondenaController:
 
     def eliminar_condena(self, ID_Condena):
         self.operacionCrud.execDelete('condena', f'ID_Condena = {ID_Condena}')
-
-    def mostrar_condenas(self, respuesta):
-        condenas = []
-        if respuesta:
-            for row in respuesta:
-                condena = Condena(
-                    ID_Condena=row['ID_Condena'],
-                    ID_Interno=row['ID_Interno'],
-                    ID_Delito=row['ID_Delito'],
-                    Fecha_Inicio=row['Fecha_Inicio'],
-                    Duracion=row['Duracion'],
-                    Tipo=row['Tipo'],
-                    ID_Personal=row['ID_Personal']
-                )
-                condenas.append(condena)
