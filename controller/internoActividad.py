@@ -1,40 +1,61 @@
+import json
+from models.interno_actividad import InternoActividad
+from common.crud import Crud
+from common.conexion import Conexion
 
-class InternoActividad:
-    def __init__(self, id_interno_actividad=None, id_interno=None, id_actividad=None, fecha_participacion=None):
-        self._id_interno_actividad = id_interno_actividad
-        self._id_interno = id_interno
-        self._id_actividad = id_actividad
-        self._fecha_participacion = fecha_participacion
+class InternoActividadController:
+    operacionCrud = None
 
-    # Métodos Getters
-    def get_id_interno_actividad(self):
-        return self._id_interno_actividad
+    def __init__(self):
+        self.operacionCrud = Crud()
 
-    def get_id_interno(self):
-        return self._id_interno
-
-    def get_id_actividad(self):
-        return self._id_actividad
-
-    def get_fecha_participacion(self):
-        return self._fecha_participacion
-
-    # Métodos Setters
-    def set_id_interno_actividad(self, id_interno_actividad):
-        if isinstance(id_interno_actividad, int) and id_interno_actividad > 0:
-            self._id_interno_actividad = id_interno_actividad
+    def crear_interno_actividad(self, nuevo_interno_actividad: InternoActividad):
+        interno_actividad_dict = nuevo_interno_actividad.to_dict()
+        interno_actividad_json = json.dumps(interno_actividad_dict)
+        if self.operacionCrud.execInsert("interno_actividad", interno_actividad_json):
+            print(f"InternoActividad para Interno {nuevo_interno_actividad.get_ID_Interno()} y Actividad {nuevo_interno_actividad.get_ID_Actividad()} creada con éxito.")
         else:
-            raise ValueError("El ID de la actividad del interno debe ser un entero positivo.")
+            print(f"Problemas al insertar la relación Interno-Actividad.")
 
-    def set_id_interno(self, id_interno):
-        self._id_interno = id_interno
+    def obtener_interno_actividades(self):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            print("Ejecutando la consulta para obtener relaciones Interno-Actividad...")
+            respuesta = self.operacionCrud.execSelect('interno_actividad', '*', '')
+            self.mostrar_interno_actividades(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_id_actividad(self, id_actividad):
-        self._id_actividad = id_actividad
+    def obtener_interno_actividad(self, ID_Interno, ID_Actividad):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            where_clause = f'ID_Interno = {ID_Interno} AND ID_Actividad = {ID_Actividad}'
+            respuesta = self.operacionCrud.execSelect('interno_actividad', '*', f'{{"where": "{where_clause}"}}')
+            self.mostrar_interno_actividades(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_fecha_participacion(self, fecha_participacion):
-        self._fecha_participacion = fecha_participacion
+    def actualizar_interno_actividad(self, editar_interno_actividad: InternoActividad):
+        interno_actividad_dict = editar_interno_actividad.to_dict()
+        interno_actividad_json = json.dumps(interno_actividad_dict)
+        self.operacionCrud.execUpdate('interno_actividad', interno_actividad_json, f'{{"where": "ID_Interno = {editar_interno_actividad.get_ID_Interno()} AND ID_Actividad = {editar_interno_actividad.get_ID_Actividad()}"}}')
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"InternoActividad(id: {self._id_interno_actividad}, id_interno: {self._id_interno}, id_actividad: {self._id_actividad}, fecha_participacion: {self._fecha_participacion})"
+    def eliminar_interno_actividad(self, ID_Interno, ID_Actividad):
+        where_clause = f'ID_Interno = {ID_Interno} AND ID_Actividad = {ID_Actividad}'
+        self.operacionCrud.execDelete('interno_actividad', where_clause)
+
+    def mostrar_interno_actividades(self, respuesta):
+        relaciones = []
+        if respuesta:
+            for row in respuesta:
+                interno_actividad = InternoActividad(
+                    ID_Interno=row['ID_Interno'],
+                    ID_Actividad=row['ID_Actividad']
+                )
+                relaciones.append(interno_actividad)

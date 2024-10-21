@@ -1,50 +1,49 @@
-
 class Personal:
-    def __init__(self, id_personal=None, nombre=None, rol=None, horario=None, Estado=None):
-        self._id_personal = id_personal
-        self._nombre = nombre
-        self._rol = rol
-        self._horario = horario
+    def __init__(self, ID_Personal=None, Nombre=None, Rol=None, Horario=None, Estado=None):
+        self._ID_Personal = ID_Personal
+        self._Nombre = Nombre
+        self._Rol = Rol
+        self._Horario = Horario
         self._Estado = Estado
 
-    # Métodos Getters
-    def get_id_personal(self):
-        return self._id_personal
+    # Getters
+    def get_ID_Personal(self):
+        return self._ID_Personal
 
-    def get_nombre(self):
-        return self._nombre
+    def get_Nombre(self):
+        return self._Nombre
 
-    def get_rol(self):
-        return self._rol
+    def get_Rol(self):
+        return self._Rol
 
-    def get_horario(self):
-        return self._horario
+    def get_Horario(self):
+        return self._Horario
 
     def get_Estado(self):
         return self._Estado
 
-    # Métodos Setters con validación
-    def set_id_personal(self, id_personal):
-        if isinstance(id_personal, int) and id_personal > 0:
-            self._id_personal = id_personal
-        else:
-            raise ValueError("El ID del personal debe ser un entero positivo.")
+    # Setters con validación
+    def set_ID_Personal(self, ID_Personal):
+        self._ID_Personal = ID_Personal
 
-    def set_nombre(self, nombre):
-        self._nombre = nombre
+    def set_Nombre(self, Nombre):
+        self._Nombre = Nombre
 
-    def set_rol(self, rol):
-        self._rol = rol
+    def set_Rol(self, Rol):
+        self._Rol = Rol
 
-    def set_horario(self, horario):
-        self._horario = horario
+    def set_Horario(self, Horario):
+        self._Horario = Horario
 
     def set_Estado(self, Estado):
-        if Estado in ['Activo', 'Inactivo']:
-            self._Estado = Estado
-        else:
-            raise ValueError("Estado inválido. Debe ser 'Activo' o 'Inactivo'.")
+        self._Estado = Estado
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"Personal(id: {self._id_personal}, nombre: {self._nombre}, rol: {self._rol}, horario: {self._horario}, Estado: {self._Estado})"
+    # Método para convertir a diccionario
+    def to_dict(self):
+        return {
+            'ID_Personal': self._ID_Personal,
+            'Nombre': self._Nombre,
+            'Rol': self._Rol,
+            'Horario': self._Horario,
+            'Estado': self._Estado
+        }

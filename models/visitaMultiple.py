@@ -1,47 +1,25 @@
-
 class VisitaMultiple:
-    def __init__(self, id_visita_multiple=None, id_visita=None, id_actividad=None, id_visitante=None, fecha_visita_multiple=None):
-        self._id_visita_multiple = id_visita_multiple
-        self._id_visita = id_visita
-        self._id_actividad = id_actividad
-        self._id_visitante = id_visitante
-        self._fecha_visita_multiple = fecha_visita_multiple
+    def __init__(self, ID_Visita=None, ID_Visitante=None):
+        self._ID_Visita = ID_Visita
+        self._ID_Visitante = ID_Visitante
 
-    # Métodos Getters
-    def get_id_visita_multiple(self):
-        return self._id_visita_multiple
+    # Getters
+    def get_ID_Visita(self):
+        return self._ID_Visita
 
-    def get_id_visita(self):
-        return self._id_visita
+    def get_ID_Visitante(self):
+        return self._ID_Visitante
 
-    def get_id_actividad(self):
-        return self._id_actividad
+    # Setters con validación
+    def set_ID_Visita(self, ID_Visita):
+        self._ID_Visita = ID_Visita
 
-    def get_id_visitante(self):
-        return self._id_visitante
+    def set_ID_Visitante(self, ID_Visitante):
+        self._ID_Visitante = ID_Visitante
 
-    def get_fecha_visita_multiple(self):
-        return self._fecha_visita_multiple
-
-    # Métodos Setters
-    def set_id_visita_multiple(self, id_visita_multiple):
-        if isinstance(id_visita_multiple, int) and id_visita_multiple > 0:
-            self._id_visita_multiple = id_visita_multiple
-        else:
-            raise ValueError("El ID de la visita múltiple debe ser un entero positivo.")
-
-    def set_id_visita(self, id_visita):
-        self._id_visita = id_visita
-
-    def set_id_actividad(self, id_actividad):
-        self._id_actividad = id_actividad
-
-    def set_id_visitante(self, id_visitante):
-        self._id_visitante = id_visitante
-
-    def set_fecha_visita_multiple(self, fecha_visita_multiple):
-        self._fecha_visita_multiple = fecha_visita_multiple
-
-    # Método para representar el objeto
-    def __str__(self):
-        return f"VisitaMultiple(id: {self._id_visita_multiple}, id_visita: {self._id_visita}, id_actividad: {self._id_actividad}, id_visitante: {self._id_visitante}, fecha_visita_multiple: {self._fecha_visita_multiple})"
+    # Método para convertir a diccionario
+    def to_dict(self):
+        return {
+            'ID_Visita': self._ID_Visita,
+            'ID_Visitante': self._ID_Visitante
+        }

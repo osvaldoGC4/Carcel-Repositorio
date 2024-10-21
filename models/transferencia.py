@@ -1,47 +1,57 @@
-
 class Transferencia:
-    def __init__(self, id_transferencia=None, id_interno=None, fecha_transferencia=None, motivo=None, destino=None):
-        self._id_transferencia = id_transferencia
-        self._id_interno = id_interno
-        self._fecha_transferencia = fecha_transferencia
-        self._motivo = motivo
-        self._destino = destino
+    def __init__(self, ID_Transferencia=None, ID_Interno=None, ID_Celda_Origen=None, ID_Celda_Destino=None, Fecha=None, Motivo=None):
+        self._ID_Transferencia = ID_Transferencia
+        self._ID_Interno = ID_Interno
+        self._ID_Celda_Origen = ID_Celda_Origen
+        self._ID_Celda_Destino = ID_Celda_Destino
+        self._Fecha = Fecha
+        self._Motivo = Motivo
 
-    # Métodos Getters
-    def get_id_transferencia(self):
-        return self._id_transferencia
+    # Getters
+    def get_ID_Transferencia(self):
+        return self._ID_Transferencia
 
-    def get_id_interno(self):
-        return self._id_interno
+    def get_ID_Interno(self):
+        return self._ID_Interno
 
-    def get_fecha_transferencia(self):
-        return self._fecha_transferencia
+    def get_ID_Celda_Origen(self):
+        return self._ID_Celda_Origen
 
-    def get_motivo(self):
-        return self._motivo
+    def get_ID_Celda_Destino(self):
+        return self._ID_Celda_Destino
 
-    def get_destino(self):
-        return self._destino
+    def get_Fecha(self):
+        return self._Fecha
 
-    # Métodos Setters
-    def set_id_transferencia(self, id_transferencia):
-        if isinstance(id_transferencia, int) and id_transferencia > 0:
-            self._id_transferencia = id_transferencia
-        else:
-            raise ValueError("El ID de la transferencia debe ser un entero positivo.")
+    def get_Motivo(self):
+        return self._Motivo
 
-    def set_id_interno(self, id_interno):
-        self._id_interno = id_interno
+    # Setters con validación
+    def set_ID_Transferencia(self, ID_Transferencia):
+        self._ID_Transferencia = ID_Transferencia
 
-    def set_fecha_transferencia(self, fecha_transferencia):
-        self._fecha_transferencia = fecha_transferencia
+    def set_ID_Interno(self, ID_Interno):
+        self._ID_Interno = ID_Interno
 
-    def set_motivo(self, motivo):
-        self._motivo = motivo
+    def set_ID_Celda_Origen(self, ID_Celda_Origen):
+        self._ID_Celda_Origen = ID_Celda_Origen
 
-    def set_destino(self, destino):
-        self._destino = destino
+    def set_ID_Celda_Destino(self, ID_Celda_Destino):
+        self._ID_Celda_Destino = ID_Celda_Destino
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"Transferencia(id: {self._id_transferencia}, id_interno: {self._id_interno}, fecha_transferencia: {self._fecha_transferencia}, motivo: {self._motivo}, destino: {self._destino})"
+    def set_Fecha(self, Fecha):
+        self._Fecha = Fecha
+
+    def set_Motivo(self, Motivo):
+        self._Motivo = Motivo
+
+    # Método para convertir a diccionario
+    def to_dict(self):
+        return {
+            'ID_Transferencia': self._ID_Transferencia,
+            'ID_Interno': self._ID_Interno,
+            'ID_Celda_Origen': self._ID_Celda_Origen,
+            'ID_Celda_Destino': self._ID_Celda_Destino,
+            'Fecha': self._Fecha,
+            'Motivo': self._Motivo
+        }

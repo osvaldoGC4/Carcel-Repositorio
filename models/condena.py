@@ -1,64 +1,65 @@
-
 class Condena:
-    def __init__(self, id_condena=None, id_interno=None, id_delito=None, fecha_inicio=None, duracion=None, tipo=None, id_personal=None):
-        self._id_condena = id_condena
-        self._id_interno = id_interno
-        self._id_delito = id_delito
-        self._fecha_inicio = fecha_inicio
-        self._duracion = duracion
-        self._tipo = tipo
-        self._id_personal = id_personal
+    def __init__(self, ID_Condena=None, ID_Interno=None, ID_Delito=None, Fecha_Inicio=None, Duracion=None, Tipo=None, ID_Personal=None):
+        self._ID_Condena = ID_Condena
+        self._ID_Interno = ID_Interno
+        self._ID_Delito = ID_Delito
+        self._Fecha_Inicio = Fecha_Inicio
+        self._Duracion = Duracion
+        self._Tipo = Tipo
+        self._ID_Personal = ID_Personal
 
-    # Métodos Getters
-    def get_id_condena(self):
-        return self._id_condena
+    # Getters
+    def get_ID_Condena(self):
+        return self._ID_Condena
 
-    def get_id_interno(self):
-        return self._id_interno
+    def get_ID_Interno(self):
+        return self._ID_Interno
 
-    def get_id_delito(self):
-        return self._id_delito
+    def get_ID_Delito(self):
+        return self._ID_Delito
 
-    def get_fecha_inicio(self):
-        return self._fecha_inicio
+    def get_Fecha_Inicio(self):
+        return self._Fecha_Inicio
 
-    def get_duracion(self):
-        return self._duracion
+    def get_Duracion(self):
+        return self._Duracion
 
-    def get_tipo(self):
-        return self._tipo
+    def get_Tipo(self):
+        return self._Tipo
 
-    def get_id_personal(self):
-        return self._id_personal
+    def get_ID_Personal(self):
+        return self._ID_Personal
 
-    # Métodos Setters con validación
-    def set_id_condena(self, id_condena):
-        if isinstance(id_condena, int) and id_condena > 0:
-            self._id_condena = id_condena
-        else:
-            raise ValueError("El ID de la condena debe ser un entero positivo.")
+    # Setters con validación
+    def set_ID_Condena(self, ID_Condena):
+        self._ID_Condena = ID_Condena
 
-    def set_id_interno(self, id_interno):
-        self._id_interno = id_interno
+    def set_ID_Interno(self, ID_Interno):
+        self._ID_Interno = ID_Interno
 
-    def set_id_delito(self, id_delito):
-        self._id_delito = id_delito
+    def set_ID_Delito(self, ID_Delito):
+        self._ID_Delito = ID_Delito
 
-    def set_fecha_inicio(self, fecha_inicio):
-        self._fecha_inicio = fecha_inicio
+    def set_Fecha_Inicio(self, Fecha_Inicio):
+        self._Fecha_Inicio = Fecha_Inicio
 
-    def set_duracion(self, duracion):
-        if isinstance(duracion, int) and duracion > 0:
-            self._duracion = duracion
-        else:
-            raise ValueError("La duración debe ser un entero positivo.")
+    def set_Duracion(self, Duracion):
+        self._Duracion = Duracion
 
-    def set_tipo(self, tipo):
-        self._tipo = tipo
+    def set_Tipo(self, Tipo):
+        self._Tipo = Tipo
 
-    def set_id_personal(self, id_personal):
-        self._id_personal = id_personal
+    def set_ID_Personal(self, ID_Personal):
+        self._ID_Personal = ID_Personal
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"Condena(id: {self._id_condena}, id_interno: {self._id_interno}, id_delito: {self._id_delito}, fecha_inicio: {self._fecha_inicio}, duracion: {self._duracion}, tipo: {self._tipo}, id_personal: {self._id_personal})"
+    # Método para convertir a diccionario
+    def to_dict(self):
+        return {
+            'ID_Condena': self._ID_Condena,
+            'ID_Interno': self._ID_Interno,
+            'ID_Delito': self._ID_Delito,
+            'Fecha_Inicio': self._Fecha_Inicio,
+            'Duracion': self._Duracion,
+            'Tipo': self._Tipo,
+            'ID_Personal': self._ID_Personal
+        }

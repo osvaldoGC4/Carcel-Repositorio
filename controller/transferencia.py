@@ -1,47 +1,63 @@
+import json
+from models.transferencia import Transferencia
+from common.crud import Crud
+from common.conexion import Conexion
 
-class Transferencia:
-    def __init__(self, id_transferencia=None, id_interno=None, fecha_transferencia=None, motivo=None, destino=None):
-        self._id_transferencia = id_transferencia
-        self._id_interno = id_interno
-        self._fecha_transferencia = fecha_transferencia
-        self._motivo = motivo
-        self._destino = destino
+class TransferenciaController:
+    operacionCrud = None
 
-    # Métodos Getters
-    def get_id_transferencia(self):
-        return self._id_transferencia
+    def __init__(self):
+        self.operacionCrud = Crud()
 
-    def get_id_interno(self):
-        return self._id_interno
-
-    def get_fecha_transferencia(self):
-        return self._fecha_transferencia
-
-    def get_motivo(self):
-        return self._motivo
-
-    def get_destino(self):
-        return self._destino
-
-    # Métodos Setters
-    def set_id_transferencia(self, id_transferencia):
-        if isinstance(id_transferencia, int) and id_transferencia > 0:
-            self._id_transferencia = id_transferencia
+    def crear_transferencia(self, nueva_transferencia: Transferencia):
+        transferencia_dict = nueva_transferencia.to_dict()
+        transferencia_json = json.dumps(transferencia_dict)
+        if self.operacionCrud.execInsert("transferencia", transferencia_json):
+            print(f"Transferencia {nueva_transferencia.get_ID_Transferencia()} creada con éxito.")
         else:
-            raise ValueError("El ID de la transferencia debe ser un entero positivo.")
+            print(f"Problemas al insertar Transferencia para el Interno {nueva_transferencia.get_ID_Interno()}.")
 
-    def set_id_interno(self, id_interno):
-        self._id_interno = id_interno
+    def obtener_transferencias(self):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            print("Ejecutando la consulta para obtener transferencias...")
+            respuesta = self.operacionCrud.execSelect('transferencia', '*', '')
+            self.mostrar_transferencias(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_fecha_transferencia(self, fecha_transferencia):
-        self._fecha_transferencia = fecha_transferencia
+    def obtener_transferencia(self, ID_Transferencia):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            respuesta = self.operacionCrud.execSelect('transferencia', '*', '{"where": "ID_Transferencia = ' + str(ID_Transferencia) + '"}')
+            self.mostrar_transferencias(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_motivo(self, motivo):
-        self._motivo = motivo
+    def actualizar_transferencia(self, editar_transferencia: Transferencia):
+        transferencia_dict = editar_transferencia.to_dict()
+        transferencia_json = json.dumps(transferencia_dict)
+        self.operacionCrud.execUpdate('transferencia', transferencia_json, '{"where": "ID_Transferencia = ' + str(editar_transferencia.get_ID_Transferencia()) + '"}')
 
-    def set_destino(self, destino):
-        self._destino = destino
+    def eliminar_transferencia(self, ID_Transferencia):
+        self.operacionCrud.execDelete('transferencia', f'ID_Transferencia = {ID_Transferencia}')
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"Transferencia(id: {self._id_transferencia}, id_interno: {self._id_interno}, fecha_transferencia: {self._fecha_transferencia}, motivo: {self._motivo}, destino: {self._destino})"
+    def mostrar_transferencias(self, respuesta):
+        transferencias = []
+        if respuesta:
+            for row in respuesta:
+                transferencia = Transferencia(
+                    ID_Transferencia=row['ID_Transferencia'],
+                    ID_Interno=row['ID_Interno'],
+                    ID_Celda_Origen=row['ID_Celda_Origen'],
+                    ID_Celda_Destino=row['ID_Celda_Destino'],
+                    Fecha=row['Fecha'],
+                    Motivo=row['Motivo']
+                )
+                transferencias.append(transferencia)

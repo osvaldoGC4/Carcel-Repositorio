@@ -1,33 +1,33 @@
-
 class Delito:
-    def __init__(self, id_delito=None, tipo=None, descripcion=None):
-        self._id_delito = id_delito
-        self._tipo = tipo
-        self._descripcion = descripcion
+    def __init__(self, ID_Delito=None, Tipo=None, Descripcion=None):
+        self._ID_Delito = ID_Delito
+        self._Tipo = Tipo
+        self._Descripcion = Descripcion
 
-    # Métodos Getters
-    def get_id_delito(self):
-        return self._id_delito
+    # Getters
+    def get_ID_Delito(self):
+        return self._ID_Delito
 
-    def get_tipo(self):
-        return self._tipo
+    def get_Tipo(self):
+        return self._Tipo
 
-    def get_descripcion(self):
-        return self._descripcion
+    def get_Descripcion(self):
+        return self._Descripcion
 
-    # Métodos Setters
-    def set_id_delito(self, id_delito):
-        if isinstance(id_delito, int) and id_delito > 0:
-            self._id_delito = id_delito
-        else:
-            raise ValueError("El ID del delito debe ser un entero positivo.")
+    # Setters con validación
+    def set_ID_Delito(self, ID_Delito):
+        self._ID_Delito = ID_Delito
 
-    def set_tipo(self, tipo):
-        self._tipo = tipo
+    def set_Tipo(self, Tipo):
+        self._Tipo = Tipo
 
-    def set_descripcion(self, descripcion):
-        self._descripcion = descripcion
+    def set_Descripcion(self, Descripcion):
+        self._Descripcion = Descripcion
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"Delito(id: {self._id_delito}, tipo: {self._tipo}, descripcion: {self._descripcion})"
+    # Método para convertir a diccionario
+    def to_dict(self):
+        return {
+            'ID_Delito': self._ID_Delito,
+            'Tipo': self._Tipo,
+            'Descripcion': self._Descripcion
+        }

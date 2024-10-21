@@ -1,36 +1,44 @@
-
 class Actividad:
-    def __init__(self, id_actividad=None, nombre=None, descripcion=None):
-        self._id_actividad = id_actividad
-        self._nombre = nombre
-        self._descripcion = descripcion
+    def __init__(self, ID_Actividad=None, Nombre=None, Tipo=None, Horario=None):
+        self._ID_Actividad = ID_Actividad
+        self._Nombre = Nombre
+        self._Tipo = Tipo
+        self._Horario = Horario
 
-    # Métodos Getters
-    def get_id_actividad(self):
-        return self._id_actividad
+    # Getters
+    def get_ID_Actividad(self):
+        return self._ID_Actividad
 
-    def get_nombre(self):
-        return self._nombre
+    def get_Nombre(self):
+        return self._Nombre
 
-    def get_descripcion(self):
-        return self._descripcion
+    def get_Tipo(self):
+        return self._Tipo
 
-    # Métodos Setters
-    def set_id_actividad(self, id_actividad):
-        if isinstance(id_actividad, int) and id_actividad > 0:
-            self._id_actividad = id_actividad
+    def get_Horario(self):
+        return self._Horario
+
+    # Setters con validación
+    def set_ID_Actividad(self, ID_Actividad):
+        if isinstance(ID_Actividad, int) and ID_Actividad > 0:
+            self._ID_Actividad = ID_Actividad
         else:
             raise ValueError("El ID de la actividad debe ser un entero positivo.")
 
-    def set_nombre(self, nombre):
-        self._nombre = nombre
+    def set_Nombre(self, Nombre):
+        self._Nombre = Nombre
 
-    def set_descripcion(self, descripcion):
-        self._descripcion = descripcion
+    def set_Tipo(self, Tipo):
+        self._Tipo = Tipo
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"Actividad(id: {self._id_actividad}, nombre: {self._nombre}, descripcion: {self._descripcion})"
+    def set_Horario(self, Horario):
+        self._Horario = Horario
 
-
- 
+    # Método para convertir a diccionario
+    def to_dict(self):
+        return {
+            'ID_Actividad': self._ID_Actividad,
+            'Nombre': self._Nombre,
+            'Tipo': self._Tipo,
+            'Horario': self._Horario
+        }

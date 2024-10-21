@@ -1,50 +1,62 @@
+import json
+from models.personal import Personal
+from common.crud import Crud
+from common.conexion import Conexion
 
-class Personal:
-    def __init__(self, id_personal=None, nombre=None, rol=None, horario=None, Estado=None):
-        self._id_personal = id_personal
-        self._nombre = nombre
-        self._rol = rol
-        self._horario = horario
-        self._Estado = Estado
+class PersonalController:
+    operacionCrud = None
 
-    # Métodos Getters
-    def get_id_personal(self):
-        return self._id_personal
+    def __init__(self):
+        self.operacionCrud = Crud()
 
-    def get_nombre(self):
-        return self._nombre
-
-    def get_rol(self):
-        return self._rol
-
-    def get_horario(self):
-        return self._horario
-
-    def get_Estado(self):
-        return self._Estado
-
-    # Métodos Setters con validación
-    def set_id_personal(self, id_personal):
-        if isinstance(id_personal, int) and id_personal > 0:
-            self._id_personal = id_personal
+    def crear_personal(self, nuevo_personal: Personal):
+        personal_dict = nuevo_personal.to_dict()
+        personal_json = json.dumps(personal_dict)
+        if self.operacionCrud.execInsert("personal", personal_json):
+            print(f"Personal {nuevo_personal.get_ID_Personal()} creado con éxito.")
         else:
-            raise ValueError("El ID del personal debe ser un entero positivo.")
+            print(f"Problemas al insertar Personal {nuevo_personal.get_Nombre()}.")
 
-    def set_nombre(self, nombre):
-        self._nombre = nombre
+    def obtener_personal(self):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            print("Ejecutando la consulta para obtener personal...")
+            respuesta = self.operacionCrud.execSelect('personal', '*', '')
+            self.mostrar_personal(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_rol(self, rol):
-        self._rol = rol
+    def obtener_personal_por_id(self, ID_Personal):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            respuesta = self.operacionCrud.execSelect('personal', '*', '{"where": "ID_Personal = ' + str(ID_Personal) + '"}')
+            self.mostrar_personal(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_horario(self, horario):
-        self._horario = horario
+    def actualizar_personal(self, editar_personal: Personal):
+        personal_dict = editar_personal.to_dict()
+        personal_json = json.dumps(personal_dict)
+        self.operacionCrud.execUpdate('personal', personal_json, '{"where": "ID_Personal = ' + str(editar_personal.get_ID_Personal()) + '"}')
 
-    def set_Estado(self, Estado):
-        if Estado in ['Activo', 'Inactivo']:
-            self._Estado = Estado
-        else:
-            raise ValueError("Estado inválido. Debe ser 'Activo' o 'Inactivo'.")
+    def eliminar_personal(self, ID_Personal):
+        self.operacionCrud.execDelete('personal', f'ID_Personal = {ID_Personal}')
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"Personal(id: {self._id_personal}, nombre: {self._nombre}, rol: {self._rol}, horario: {self._horario}, Estado: {self._Estado})"
+    def mostrar_personal(self, respuesta):
+        personal_list = []
+        if respuesta:
+            for row in respuesta:
+                personal = Personal(
+                    ID_Personal=row['ID_Personal'],
+                    Nombre=row['Nombre'],
+                    Rol=row['Rol'],
+                    Horario=row['Horario'],
+                    Estado=row['Estado']
+                )
+                personal_list.append(personal)

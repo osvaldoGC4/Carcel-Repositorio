@@ -1,47 +1,61 @@
+import json
+from models.visita_multiple import VisitaMultiple
+from common.crud import Crud
+from common.conexion import Conexion
 
-class VisitaMultiple:
-    def __init__(self, id_visita_multiple=None, id_visita=None, id_actividad=None, id_visitante=None, fecha_visita_multiple=None):
-        self._id_visita_multiple = id_visita_multiple
-        self._id_visita = id_visita
-        self._id_actividad = id_actividad
-        self._id_visitante = id_visitante
-        self._fecha_visita_multiple = fecha_visita_multiple
+class VisitaMultipleController:
+    operacionCrud = None
 
-    # Métodos Getters
-    def get_id_visita_multiple(self):
-        return self._id_visita_multiple
+    def __init__(self):
+        self.operacionCrud = Crud()
 
-    def get_id_visita(self):
-        return self._id_visita
-
-    def get_id_actividad(self):
-        return self._id_actividad
-
-    def get_id_visitante(self):
-        return self._id_visitante
-
-    def get_fecha_visita_multiple(self):
-        return self._fecha_visita_multiple
-
-    # Métodos Setters
-    def set_id_visita_multiple(self, id_visita_multiple):
-        if isinstance(id_visita_multiple, int) and id_visita_multiple > 0:
-            self._id_visita_multiple = id_visita_multiple
+    def crear_visita_multiple(self, nueva_visita_multiple: VisitaMultiple):
+        visita_multiple_dict = nueva_visita_multiple.to_dict()
+        visita_multiple_json = json.dumps(visita_multiple_dict)
+        if self.operacionCrud.execInsert("visita_multiple", visita_multiple_json):
+            print(f"VisitaMultiple para Visita {nueva_visita_multiple.get_ID_Visita()} y Visitante {nueva_visita_multiple.get_ID_Visitante()} creada con éxito.")
         else:
-            raise ValueError("El ID de la visita múltiple debe ser un entero positivo.")
+            print(f"Problemas al insertar la Visita Múltiple.")
 
-    def set_id_visita(self, id_visita):
-        self._id_visita = id_visita
+    def obtener_visitas_multiples(self):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            print("Ejecutando la consulta para obtener visitas múltiples...")
+            respuesta = self.operacionCrud.execSelect('visita_multiple', '*', '')
+            self.mostrar_visitas_multiples(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_id_actividad(self, id_actividad):
-        self._id_actividad = id_actividad
+    def obtener_visita_multiple(self, ID_Visita, ID_Visitante):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            where_clause = f'ID_Visita = {ID_Visita} AND ID_Visitante = {ID_Visitante}'
+            respuesta = self.operacionCrud.execSelect('visita_multiple', '*', f'{{"where": "{where_clause}"}}')
+            self.mostrar_visitas_multiples(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_id_visitante(self, id_visitante):
-        self._id_visitante = id_visitante
+    def actualizar_visita_multiple(self, editar_visita_multiple: VisitaMultiple):
+        visita_multiple_dict = editar_visita_multiple.to_dict()
+        visita_multiple_json = json.dumps(visita_multiple_dict)
+        self.operacionCrud.execUpdate('visita_multiple', visita_multiple_json, f'{{"where": "ID_Visita = {editar_visita_multiple.get_ID_Visita()} AND ID_Visitante = {editar_visita_multiple.get_ID_Visitante()}"}}')
 
-    def set_fecha_visita_multiple(self, fecha_visita_multiple):
-        self._fecha_visita_multiple = fecha_visita_multiple
+    def eliminar_visita_multiple(self, ID_Visita, ID_Visitante):
+        where_clause = f'ID_Visita = {ID_Visita} AND ID_Visitante = {ID_Visitante}'
+        self.operacionCrud.execDelete('visita_multiple', where_clause)
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"VisitaMultiple(id: {self._id_visita_multiple}, id_visita: {self._id_visita}, id_actividad: {self._id_actividad}, id_visitante: {self._id_visitante}, fecha_visita_multiple: {self._fecha_visita_multiple})"
+    def mostrar_visitas_multiples(self, respuesta):
+        relaciones = []
+        if respuesta:
+            for row in respuesta:
+                visita_multiple = VisitaMultiple(
+                    ID_Visita=row['ID_Visita'],
+                    ID_Visitante=row['ID_Visitante']
+                )
+                relaciones.append(visita_multiple)

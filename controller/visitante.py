@@ -1,40 +1,61 @@
+import json
+from models.visitante import Visitante
+from common.crud import Crud
+from common.conexion import Conexion
 
-class Visitante:
-    def __init__(self, id_visitante=None, nombre=None, documento_identidad=None, telefono=None):
-        self._id_visitante = id_visitante
-        self._nombre = nombre
-        self._documento_identidad = documento_identidad
-        self._telefono = telefono
+class VisitanteController:
+    operacionCrud = None
 
-    # Métodos Getters
-    def get_id_visitante(self):
-        return self._id_visitante
+    def __init__(self):
+        self.operacionCrud = Crud()
 
-    def get_nombre(self):
-        return self._nombre
-
-    def get_documento_identidad(self):
-        return self._documento_identidad
-
-    def get_telefono(self):
-        return self._telefono
-
-    # Métodos Setters
-    def set_id_visitante(self, id_visitante):
-        if isinstance(id_visitante, int) and id_visitante > 0:
-            self._id_visitante = id_visitante
+    def crear_visitante(self, nuevo_visitante: Visitante):
+        visitante_dict = nuevo_visitante.to_dict()
+        visitante_json = json.dumps(visitante_dict)
+        if self.operacionCrud.execInsert("visitante", visitante_json):
+            print(f"Visitante {nuevo_visitante.get_ID_Visitante()} creado con éxito.")
         else:
-            raise ValueError("El ID del visitante debe ser un entero positivo.")
+            print(f"Problemas al insertar Visitante {nuevo_visitante.get_Nombre()}.")
 
-    def set_nombre(self, nombre):
-        self._nombre = nombre
+    def obtener_visitantes(self):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            print("Ejecutando la consulta para obtener visitantes...")
+            respuesta = self.operacionCrud.execSelect('visitante', '*', '')
+            self.mostrar_visitantes(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_documento_identidad(self, documento_identidad):
-        self._documento_identidad = documento_identidad
+    def obtener_visitante(self, ID_Visitante):
+        conexion = Conexion()
+        conexion.conectar()
+        try:
+            respuesta = self.operacionCrud.execSelect('visitante', '*', '{"where": "ID_Visitante = ' + str(ID_Visitante) + '"}')
+            self.mostrar_visitantes(respuesta)
+        except pyodbc.Error as e:
+            print(f"Error en la ejecución de la consulta: {e}")
+        finally:
+            conexion.cerrar()
 
-    def set_telefono(self, telefono):
-        self._telefono = telefono
+    def actualizar_visitante(self, editar_visitante: Visitante):
+        visitante_dict = editar_visitante.to_dict()
+        visitante_json = json.dumps(visitante_dict)
+        self.operacionCrud.execUpdate('visitante', visitante_json, '{"where": "ID_Visitante = ' + str(editar_visitante.get_ID_Visitante()) + '"}')
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"Visitante(id: {self._id_visitante}, nombre: {self._nombre}, documento_identidad: {self._documento_identidad}, telefono: {self._telefono})"
+    def eliminar_visitante(self, ID_Visitante):
+        self.operacionCrud.execDelete('visitante', f'ID_Visitante = {ID_Visitante}')
+
+    def mostrar_visitantes(self, respuesta):
+        visitantes = []
+        if respuesta:
+            for row in respuesta:
+                visitante = Visitante(
+                    ID_Visitante=row['ID_Visitante'],
+                    Nombre=row['Nombre'],
+                    Relacion=row['Relacion'],
+                    Documento=row['Documento']
+                )
+                visitantes.append(visitante)

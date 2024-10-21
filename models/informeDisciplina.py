@@ -1,47 +1,49 @@
-
 class InformeDisciplina:
-    def __init__(self, id_informe=None, id_interno=None, fecha_informe=None, descripcion=None, accion=None):
-        self._id_informe = id_informe
-        self._id_interno = id_interno
-        self._fecha_informe = fecha_informe
-        self._descripcion = descripcion
-        self._accion = accion
+    def __init__(self, ID_Informe=None, ID_Interno=None, Fecha=None, Descripcion=None, Sancion=None):
+        self._ID_Informe = ID_Informe
+        self._ID_Interno = ID_Interno
+        self._Fecha = Fecha
+        self._Descripcion = Descripcion
+        self._Sancion = Sancion
 
-    # Métodos Getters
-    def get_id_informe(self):
-        return self._id_informe
+    # Getters
+    def get_ID_Informe(self):
+        return self._ID_Informe
 
-    def get_id_interno(self):
-        return self._id_interno
+    def get_ID_Interno(self):
+        return self._ID_Interno
 
-    def get_fecha_informe(self):
-        return self._fecha_informe
+    def get_Fecha(self):
+        return self._Fecha
 
-    def get_descripcion(self):
-        return self._descripcion
+    def get_Descripcion(self):
+        return self._Descripcion
 
-    def get_accion(self):
-        return self._accion
+    def get_Sancion(self):
+        return self._Sancion
 
-    # Métodos Setters
-    def set_id_informe(self, id_informe):
-        if isinstance(id_informe, int) and id_informe > 0:
-            self._id_informe = id_informe
-        else:
-            raise ValueError("El ID del informe debe ser un entero positivo.")
+    # Setters con validación
+    def set_ID_Informe(self, ID_Informe):
+        self._ID_Informe = ID_Informe
 
-    def set_id_interno(self, id_interno):
-        self._id_interno = id_interno
+    def set_ID_Interno(self, ID_Interno):
+        self._ID_Interno = ID_Interno
 
-    def set_fecha_informe(self, fecha_informe):
-        self._fecha_informe = fecha_informe
+    def set_Fecha(self, Fecha):
+        self._Fecha = Fecha
 
-    def set_descripcion(self, descripcion):
-        self._descripcion = descripcion
+    def set_Descripcion(self, Descripcion):
+        self._Descripcion = Descripcion
 
-    def set_accion(self, accion):
-        self._accion = accion
+    def set_Sancion(self, Sancion):
+        self._Sancion = Sancion
 
-    # Método para representar el objeto
-    def __str__(self):
-        return f"InformeDisciplina(id: {self._id_informe}, id_interno: {self._id_interno}, fecha_informe: {self._fecha_informe}, descripcion: {self._descripcion}, accion: {self._accion})"
+    # Método para convertir a diccionario
+    def to_dict(self):
+        return {
+            'ID_Informe': self._ID_Informe,
+            'ID_Interno': self._ID_Interno,
+            'Fecha': self._Fecha,
+            'Descripcion': self._Descripcion,
+            'Sancion': self._Sancion
+        }
