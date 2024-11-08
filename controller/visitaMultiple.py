@@ -1,55 +1,21 @@
-import json
-import pyodbc
-from models.visitaMultiple import VisitaMultiple
-from common.crud import Crud
-from common.conexion import Conexion
-from common.utiles import Utiles
+from flask import Blueprint, request
+from controller.baseController import BaseController
 
-class VisitaMultipleController:
-    operacionCrud = None
+class VisitaMultipleController(BaseController):
+    def __init__(self, app):
+        super().__init__('visitaMultiple')
+        visitaMultiple_blueprint = Blueprint('visitaMultiple', __name__)
+        visitaMultiple_blueprint.add_url_rule('/', view_func=self.getAll, methods=["GET"])
+        visitaMultiple_blueprint.add_url_rule('/<int:id>', view_func=self.getById, methods=["GET"])
+        visitaMultiple_blueprint.add_url_rule('/', view_func=self.create, methods=["POST"])
+        visitaMultiple_blueprint.add_url_rule('/<int:id>', view_func=self.update_route, methods=["PATCH"])
+        visitaMultiple_blueprint.add_url_rule('/<int:id>', view_func=self.delete_route, methods=["DELETE"])
+        app.register_blueprint(visitaMultiple_blueprint, url_prefix='/visitaMultiple')
 
-    def __init__(self):
-        self.operacionCrud = Crud()
-        self.show = Utiles()
+    def update_route(self, id):
+        extra_params = request.args.to_dict()
+        return self.update(id, extra_params)
 
-    def crear_visita_multiple(self, nueva_visita_multiple: VisitaMultiple):
-        visita_multiple_dict = nueva_visita_multiple.to_dict()
-        visita_multiple_json = json.dumps(visita_multiple_dict)
-        if self.operacionCrud.execInsert("visita_multiple", visita_multiple_json):
-            print(f"VisitaMultiple para Visita {nueva_visita_multiple.get_ID_Visita()} y Visitante {nueva_visita_multiple.get_ID_Visitante()} creada con éxito.")
-        else:
-            print(f"Problemas al insertar la Visita Múltiple.")
-
-    def obtener_visitas_multiples(self):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            print("Ejecutando la consulta para obtener visitas múltiples...")
-            respuesta = self.operacionCrud.execSelect('visita_multiple', '*', '')
-            self.show.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def obtener_visita_multiple(self, ID_Visita, ID_Visitante):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            where_clause = f'ID_Visita = {ID_Visita} AND ID_Visitante = {ID_Visitante}'
-            respuesta = self.operacionCrud.execSelect('visita_multiple', '*', f'{{"where": "{where_clause}"}}')
-            self.show.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def actualizar_visita_multiple(self, editar_visita_multiple: VisitaMultiple):
-        visita_multiple_dict = editar_visita_multiple.to_dict()
-        visita_multiple_json = json.dumps(visita_multiple_dict)
-        self.operacionCrud.execUpdate('visita_multiple', visita_multiple_json, f'{{"where": "ID_Visita = {editar_visita_multiple.get_ID_Visita()} AND ID_Visitante = {editar_visita_multiple.get_ID_Visitante()}"}}')
-
-    def eliminar_visita_multiple(self, ID_Visita, ID_Visitante):
-        where_clause = f'ID_Visita = {ID_Visita} AND ID_Visitante = {ID_Visitante}'
-        self.operacionCrud.execDelete('visita_multiple', where_clause)
-
+    def delete_route(self, id):
+        extra_params = request.args.to_dict()
+        return self.delete(id, extra_params)

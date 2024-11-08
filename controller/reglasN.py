@@ -19,7 +19,7 @@ class ReglasNController:
 
             print("Ejecutando el procedimiento almacenado para contar reclusos por celda...")
             respuesta = self.conexion.execSPResult('ContarReclusosPorCelda', [])
-            self.show.mostrar_resultados_dinamico(respuesta)
+            Utiles.mostrar_resultados_dinamico(respuesta)
 
         except pyodbc.Error as e:
             print(f"Error en la ejecución del SP: {e}")
@@ -37,7 +37,7 @@ class ReglasNController:
             params = (id_interno, id_delito)
             respuesta = self.conexion.execSPResult('ObtenerCondenaPorInternoYDelito', params)
     
-            self.show.mostrar_resultados_dinamico(respuesta)
+            Utiles.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución del SP: {e}")
         finally:

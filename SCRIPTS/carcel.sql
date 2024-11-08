@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-10-2024 a las 20:06:09
--- Versión del servidor: 10.4.19-MariaDB
--- Versión de PHP: 8.0.7
+-- Tiempo de generación: 08-11-2024 a las 17:26:43
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,19 +25,19 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ContarReclusosPorCelda` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ContarReclusosPorCelda` ()   BEGIN
     SELECT 
         c.Ubicacion,
-        COUNT(i.ID_Interno) AS Total_Reclusos
+        COUNT(i.ID) AS Total_Reclusos
     FROM 
         celda c
     LEFT JOIN 
-        interno i ON c.ID_Celda = i.ID_Celda
+        interno i ON c.ID_Celda = i.ID
     GROUP BY 
         c.ID_Celda;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalSelect` (IN `tableName` VARCHAR(255), IN `columnList` VARCHAR(255), IN `options` JSON)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalSelect` (IN `tableName` VARCHAR(255), IN `columnList` VARCHAR(255), IN `options` JSON)   BEGIN
     DECLARE sqlStatement TEXT;
     DECLARE whereClause TEXT DEFAULT '';
     DECLARE orderByClause TEXT DEFAULT '';
@@ -74,7 +74,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalSelect` (IN `tableName` VA
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalUpdate` (IN `tableName` VARCHAR(255), IN `columnsAndValues` JSON, IN `options` JSON)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalUpdate` (IN `tableName` VARCHAR(255), IN `columnsAndValues` JSON, IN `options` JSON)   BEGIN
     DECLARE sqlStatement TEXT;
     DECLARE setClause TEXT DEFAULT '';
     DECLARE whereClause TEXT DEFAULT '';
@@ -136,7 +136,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalUpdate` (IN `tableName` VA
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicDelete` (IN `tableName` VARCHAR(255), IN `whereCondition` TEXT, IN `orderBy` TEXT, IN `groupBy` TEXT, IN `havingCondition` TEXT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicDelete` (IN `tableName` VARCHAR(255), IN `whereCondition` TEXT, IN `orderBy` TEXT, IN `groupBy` TEXT, IN `havingCondition` TEXT)   BEGIN
     DECLARE sqlStatement TEXT;  -- Declaración SQL para construir la consulta
     DECLARE errMsg TEXT;        -- Mensaje de error
 
@@ -179,7 +179,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicDelete` (IN `tableName` VARC
     -- SELECT CONCAT('Consulta ejecutada: ', sqlStatement) AS Query_Executed;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicInsert` (IN `tableName` VARCHAR(255), IN `jsonData` JSON)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicInsert` (IN `tableName` VARCHAR(255), IN `jsonData` JSON)   BEGIN
     DECLARE sqlStatement TEXT;
     DECLARE columns TEXT;
     DECLARE valueList TEXT;  -- Cambié el nombre de la variable
@@ -228,9 +228,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicInsert` (IN `tableName` VARC
     DEALLOCATE PREPARE stmt;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCondenaPorInternoYDelito` (IN `p_ID_Interno` INT, IN `p_ID_Delito` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCondenaPorInternoYDelito` (IN `p_ID_Interno` INT, IN `p_ID_Delito` INT)   BEGIN
     SELECT 
-        c.ID_Condena,
+        c.ID,
         c.Fecha_Inicio,
         c.Duracion,
         c.Tipo,
@@ -239,11 +239,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCondenaPorInternoYDelito` (I
     FROM 
         condena c
     INNER JOIN 
-        interno i ON c.ID_Interno = i.ID_Interno
+        interno i ON c.ID_Interno = i.ID
     INNER JOIN 
-        delito d ON c.ID_Delito = d.ID_Delito
+        delito d ON c.ID_Delito = d.ID
     WHERE 
-        c.ID_Interno = p_ID_Interno AND c.ID_Delito = p_ID_Delito;
+        c.ID_Interno = p_ID_Interno AND c.ID = p_ID_Delito;
 END$$
 
 DELIMITER ;
@@ -255,17 +255,17 @@ DELIMITER ;
 --
 
 CREATE TABLE `actividad` (
-  `ID_Actividad` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `Nombre` varchar(255) DEFAULT NULL,
   `Tipo` varchar(255) DEFAULT NULL COMMENT 'Educativa, Recreativa, Laboral',
   `Horario` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `actividad`
 --
 
-INSERT INTO `actividad` (`ID_Actividad`, `Nombre`, `Tipo`, `Horario`) VALUES
+INSERT INTO `actividad` (`ID`, `Nombre`, `Tipo`, `Horario`) VALUES
 (1, 'Actividad Cultural', 'Deporte', '09:00-10:00'),
 (2, 'Clases de Matemáticas', 'Educativa', '11:00-13:00'),
 (3, 'Cuidado del Huerto', 'Laboral', '14:00-16:00'),
@@ -284,21 +284,21 @@ INSERT INTO `actividad` (`ID_Actividad`, `Nombre`, `Tipo`, `Horario`) VALUES
 --
 
 CREATE TABLE `celda` (
-  `ID_Celda` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `Ubicacion` varchar(255) DEFAULT NULL,
   `Capacidad` int(11) DEFAULT NULL,
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Ocupada, Disponible'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `celda`
 --
 
-INSERT INTO `celda` (`ID_Celda`, `Ubicacion`, `Capacidad`, `Estado`) VALUES
+INSERT INTO `celda` (`ID`, `Ubicacion`, `Capacidad`, `Estado`) VALUES
 (1, 'Medellin', 8, 'Disponible'),
-(2, 'Zona Sur', 40, 'Ocupada'),
-(3, 'Zona Este', 30, 'Disponible'),
-(4, 'Zona Oeste', 25, 'Ocupada'),
+(2, 'Medellin2', 5, 'Disponible'),
+(3, 'Bello', 10, 'Disponible'),
+(4, 'Aranjuez', 100, 'Disponible'),
 (5, 'Zona Centro', 60, 'Disponible'),
 (6, 'Zona Alta', 70, 'Ocupada'),
 (7, 'Zona Baja', 80, 'Disponible'),
@@ -313,20 +313,20 @@ INSERT INTO `celda` (`ID_Celda`, `Ubicacion`, `Capacidad`, `Estado`) VALUES
 --
 
 CREATE TABLE `condena` (
-  `ID_Condena` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `ID_Interno` int(11) DEFAULT NULL,
   `ID_Delito` int(11) DEFAULT NULL,
   `Fecha_Inicio` date DEFAULT NULL,
   `Duracion` int(11) DEFAULT NULL COMMENT 'En meses',
   `Tipo` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Permanente, Temporal',
   `ID_Personal` int(11) DEFAULT NULL COMMENT 'Responsable de la condena'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `condena`
 --
 
-INSERT INTO `condena` (`ID_Condena`, `ID_Interno`, `ID_Delito`, `Fecha_Inicio`, `Duracion`, `Tipo`, `ID_Personal`) VALUES
+INSERT INTO `condena` (`ID`, `ID_Interno`, `ID_Delito`, `Fecha_Inicio`, `Duracion`, `Tipo`, `ID_Personal`) VALUES
 (1, 1, 1, '2023-01-01', 12, 'Permanente', 1),
 (2, 2, 2, '2022-06-15', 6, 'Temporal', 2),
 (3, 3, 3, '2023-03-20', 24, 'Permanente', 3),
@@ -345,19 +345,19 @@ INSERT INTO `condena` (`ID_Condena`, `ID_Interno`, `ID_Delito`, `Fecha_Inicio`, 
 --
 
 CREATE TABLE `delito` (
-  `ID_Delito` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `Tipo` varchar(255) DEFAULT NULL,
   `Descripcion` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `delito`
 --
 
-INSERT INTO `delito` (`ID_Delito`, `Tipo`, `Descripcion`) VALUES
-(1, 'Robo', 'Robo a mano armada'),
-(2, 'Asesinato', 'Asesinato premeditado'),
-(3, 'Fraude', 'Fraude financiero'),
+INSERT INTO `delito` (`ID`, `Tipo`, `Descripcion`) VALUES
+(1, 'Mano armada', 'Puñalada en un ojo'),
+(2, 'asesinato', 'fleteo'),
+(3, 'corrupcion', 'abogado'),
 (4, 'Tráfico de drogas', 'Tráfico de sustancias controladas'),
 (5, 'Secuestro', 'Secuestro de personas'),
 (6, 'Extorsión', 'Extorsión económica'),
@@ -369,22 +369,22 @@ INSERT INTO `delito` (`ID_Delito`, `Tipo`, `Descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `informe_disciplina`
+-- Estructura de tabla para la tabla `informedisciplina`
 --
 
-CREATE TABLE `informe_disciplina` (
-  `ID_Informe` int(11) NOT NULL,
+CREATE TABLE `informedisciplina` (
+  `ID` int(11) NOT NULL,
   `ID_Interno` int(11) DEFAULT NULL,
   `Fecha` date DEFAULT NULL,
   `Descripcion` text DEFAULT NULL,
   `Sancion` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `informe_disciplina`
+-- Volcado de datos para la tabla `informedisciplina`
 --
 
-INSERT INTO `informe_disciplina` (`ID_Informe`, `ID_Interno`, `Fecha`, `Descripcion`, `Sancion`) VALUES
+INSERT INTO `informedisciplina` (`ID`, `ID_Interno`, `Fecha`, `Descripcion`, `Sancion`) VALUES
 (1, 1, '2024-01-15', 'Riña con otro interno', 'Reprimenda'),
 (2, 2, '2024-01-16', 'Fuga tentativa', 'Aislamiento'),
 (3, 3, '2024-01-17', 'Uso de drogas', 'Suspensión de actividades'),
@@ -403,20 +403,20 @@ INSERT INTO `informe_disciplina` (`ID_Informe`, `ID_Interno`, `Fecha`, `Descripc
 --
 
 CREATE TABLE `interno` (
-  `ID_Interno` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `Nombre` varchar(255) DEFAULT NULL,
   `Fecha_Ingreso` date DEFAULT NULL,
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Activo, Liberado, Transferido',
   `ID_Celda` int(11) DEFAULT NULL,
   `Fecha_Liberacion` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `interno`
 --
 
-INSERT INTO `interno` (`ID_Interno`, `Nombre`, `Fecha_Ingreso`, `Estado`, `ID_Celda`, `Fecha_Liberacion`) VALUES
-(1, 'Juan Pérez', '2022-01-01', 'Activo', 1, NULL),
+INSERT INTO `interno` (`ID`, `Nombre`, `Fecha_Ingreso`, `Estado`, `ID_Celda`, `Fecha_Liberacion`) VALUES
+(1, 'Juan Perez', '2023-01-01', 'Liberado', 2, '0000-00-00'),
 (2, 'Luis Gómez', '2021-06-15', 'Activo', 2, NULL),
 (3, 'Carlos Fernández', '2023-03-20', 'Activo', 3, NULL),
 (4, 'José Martínez', '2024-01-10', 'Activo', 4, NULL),
@@ -430,29 +430,31 @@ INSERT INTO `interno` (`ID_Interno`, `Nombre`, `Fecha_Ingreso`, `Estado`, `ID_Ce
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `interno_actividad`
+-- Estructura de tabla para la tabla `internoactividad`
 --
 
-CREATE TABLE `interno_actividad` (
+CREATE TABLE `internoactividad` (
+  `ID` int(11) NOT NULL,
   `ID_Interno` int(11) NOT NULL,
-  `ID_Actividad` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `ID_Actividad` int(11) NOT NULL,
+  `Fecha_Actividad` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `interno_actividad`
+-- Volcado de datos para la tabla `internoactividad`
 --
 
-INSERT INTO `interno_actividad` (`ID_Interno`, `ID_Actividad`) VALUES
-(1, 1),
-(1, 2),
-(2, 1),
-(2, 3),
-(3, 2),
-(3, 4),
-(4, 3),
-(5, 2),
-(6, 5),
-(7, 6);
+INSERT INTO `internoactividad` (`ID`, `ID_Interno`, `ID_Actividad`, `Fecha_Actividad`) VALUES
+(1, 1, 1, '2024-02-02'),
+(2, 1, 2, '2024-02-02'),
+(3, 2, 1, '2024-02-02'),
+(4, 2, 3, '2024-02-02'),
+(5, 3, 2, '2024-02-02'),
+(6, 3, 4, '2024-02-02'),
+(7, 4, 3, '2024-02-02'),
+(8, 5, 2, '2024-02-02'),
+(9, 6, 5, '2024-02-02'),
+(10, 7, 6, '2024-02-02');
 
 -- --------------------------------------------------------
 
@@ -461,19 +463,19 @@ INSERT INTO `interno_actividad` (`ID_Interno`, `ID_Actividad`) VALUES
 --
 
 CREATE TABLE `personal` (
-  `ID_Personal` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `Nombre` varchar(255) DEFAULT NULL,
   `Rol` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Guardia, Administrador',
   `Horario` varchar(255) DEFAULT NULL,
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Activo, Inactivo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `personal`
 --
 
-INSERT INTO `personal` (`ID_Personal`, `Nombre`, `Rol`, `Horario`, `Estado`) VALUES
-(1, 'Andrés Ruiz', 'Guardia', '08:00-16:00', 'Activo'),
+INSERT INTO `personal` (`ID`, `Nombre`, `Rol`, `Horario`, `Estado`) VALUES
+(1, 'Andru00e9s Ruiz', 'Guardia', '08:00-16:00', 'Inactivo'),
 (2, 'Paola Martínez', 'Administradora', '09:00-17:00', 'Activo'),
 (3, 'Fernando Gómez', 'Psicólogo', '10:00-18:00', 'Activo'),
 (4, 'Laura Fernández', 'Educadora', '09:00-17:00', 'Inactivo'),
@@ -491,19 +493,19 @@ INSERT INTO `personal` (`ID_Personal`, `Nombre`, `Rol`, `Horario`, `Estado`) VAL
 --
 
 CREATE TABLE `transferencia` (
-  `ID_Transferencia` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `ID_Interno` int(11) DEFAULT NULL,
   `ID_Celda_Origen` int(11) DEFAULT NULL,
   `ID_Celda_Destino` int(11) DEFAULT NULL,
   `Fecha` date DEFAULT NULL,
   `Motivo` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `transferencia`
 --
 
-INSERT INTO `transferencia` (`ID_Transferencia`, `ID_Interno`, `ID_Celda_Origen`, `ID_Celda_Destino`, `Fecha`, `Motivo`) VALUES
+INSERT INTO `transferencia` (`ID`, `ID_Interno`, `ID_Celda_Origen`, `ID_Celda_Destino`, `Fecha`, `Motivo`) VALUES
 (1, 1, 1, 2, '2024-01-01', NULL),
 (2, 2, 2, 3, '2024-02-01', NULL),
 (3, 3, 3, 4, '2024-03-01', NULL),
@@ -522,13 +524,40 @@ INSERT INTO `transferencia` (`ID_Transferencia`, `ID_Interno`, `ID_Celda_Origen`
 --
 
 CREATE TABLE `visita` (
-  `ID_Visita` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `ID_Interno` int(11) DEFAULT NULL,
   `ID_Visitante` int(11) DEFAULT NULL,
   `Fecha` date DEFAULT NULL,
   `Hora_Inicio` time DEFAULT NULL,
   `Duracion` int(11) DEFAULT NULL COMMENT 'En minutos'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `visita`
+--
+
+INSERT INTO `visita` (`ID`, `ID_Interno`, `ID_Visitante`, `Fecha`, `Hora_Inicio`, `Duracion`) VALUES
+(1, 1, 2, '2024-11-08', '10:00:00', 401);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `visitamultiple`
+--
+
+CREATE TABLE `visitamultiple` (
+  `ID` int(11) NOT NULL,
+  `ID_Visita` int(11) NOT NULL,
+  `ID_Visitante` int(11) NOT NULL,
+  `Observacion` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `visitamultiple`
+--
+
+INSERT INTO `visitamultiple` (`ID`, `ID_Visita`, `ID_Visitante`, `Observacion`) VALUES
+(2, 1, 2, 'Mal comportamiento, agresivo');
 
 -- --------------------------------------------------------
 
@@ -537,22 +566,18 @@ CREATE TABLE `visita` (
 --
 
 CREATE TABLE `visitante` (
-  `ID_Visitante` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `Nombre` varchar(255) DEFAULT NULL,
   `Relacion` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Familiar, Abogado',
   `Documento` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Estructura de tabla para la tabla `visita_multiple`
+-- Volcado de datos para la tabla `visitante`
 --
 
-CREATE TABLE `visita_multiple` (
-  `ID_Visita` int(11) NOT NULL,
-  `ID_Visitante` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO `visitante` (`ID`, `Nombre`, `Relacion`, `Documento`) VALUES
+(2, 'John Valencia', 'Parcero', '1003222');
 
 --
 -- Índices para tablas volcadas
@@ -562,19 +587,19 @@ CREATE TABLE `visita_multiple` (
 -- Indices de la tabla `actividad`
 --
 ALTER TABLE `actividad`
-  ADD PRIMARY KEY (`ID_Actividad`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Indices de la tabla `celda`
 --
 ALTER TABLE `celda`
-  ADD PRIMARY KEY (`ID_Celda`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Indices de la tabla `condena`
 --
 ALTER TABLE `condena`
-  ADD PRIMARY KEY (`ID_Condena`),
+  ADD PRIMARY KEY (`ID`),
   ADD KEY `ID_Interno` (`ID_Interno`),
   ADD KEY `ID_Delito` (`ID_Delito`),
   ADD KEY `ID_Personal` (`ID_Personal`);
@@ -583,40 +608,41 @@ ALTER TABLE `condena`
 -- Indices de la tabla `delito`
 --
 ALTER TABLE `delito`
-  ADD PRIMARY KEY (`ID_Delito`);
+  ADD PRIMARY KEY (`ID`);
 
 --
--- Indices de la tabla `informe_disciplina`
+-- Indices de la tabla `informedisciplina`
 --
-ALTER TABLE `informe_disciplina`
-  ADD PRIMARY KEY (`ID_Informe`),
+ALTER TABLE `informedisciplina`
+  ADD PRIMARY KEY (`ID`),
   ADD KEY `ID_Interno` (`ID_Interno`);
 
 --
 -- Indices de la tabla `interno`
 --
 ALTER TABLE `interno`
-  ADD PRIMARY KEY (`ID_Interno`),
+  ADD PRIMARY KEY (`ID`),
   ADD KEY `ID_Celda` (`ID_Celda`);
 
 --
--- Indices de la tabla `interno_actividad`
+-- Indices de la tabla `internoactividad`
 --
-ALTER TABLE `interno_actividad`
-  ADD PRIMARY KEY (`ID_Interno`,`ID_Actividad`),
-  ADD KEY `ID_Actividad` (`ID_Actividad`);
+ALTER TABLE `internoactividad`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `ID_Actividad` (`ID_Actividad`),
+  ADD KEY `internoActividad_ibfk_1` (`ID_Interno`);
 
 --
 -- Indices de la tabla `personal`
 --
 ALTER TABLE `personal`
-  ADD PRIMARY KEY (`ID_Personal`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Indices de la tabla `transferencia`
 --
 ALTER TABLE `transferencia`
-  ADD PRIMARY KEY (`ID_Transferencia`),
+  ADD PRIMARY KEY (`ID`),
   ADD KEY `ID_Interno` (`ID_Interno`),
   ADD KEY `ID_Celda_Origen` (`ID_Celda_Origen`),
   ADD KEY `ID_Celda_Destino` (`ID_Celda_Destino`);
@@ -625,22 +651,99 @@ ALTER TABLE `transferencia`
 -- Indices de la tabla `visita`
 --
 ALTER TABLE `visita`
-  ADD PRIMARY KEY (`ID_Visita`),
+  ADD PRIMARY KEY (`ID`),
   ADD KEY `ID_Interno` (`ID_Interno`),
   ADD KEY `ID_Visitante` (`ID_Visitante`);
+
+--
+-- Indices de la tabla `visitamultiple`
+--
+ALTER TABLE `visitamultiple`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `ID_Visitante` (`ID_Visitante`),
+  ADD KEY `ID_Visita` (`ID_Visita`);
 
 --
 -- Indices de la tabla `visitante`
 --
 ALTER TABLE `visitante`
-  ADD PRIMARY KEY (`ID_Visitante`);
+  ADD PRIMARY KEY (`ID`);
 
 --
--- Indices de la tabla `visita_multiple`
+-- AUTO_INCREMENT de las tablas volcadas
 --
-ALTER TABLE `visita_multiple`
-  ADD PRIMARY KEY (`ID_Visita`,`ID_Visitante`),
-  ADD KEY `ID_Visitante` (`ID_Visitante`);
+
+--
+-- AUTO_INCREMENT de la tabla `actividad`
+--
+ALTER TABLE `actividad`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `celda`
+--
+ALTER TABLE `celda`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `condena`
+--
+ALTER TABLE `condena`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `delito`
+--
+ALTER TABLE `delito`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `informedisciplina`
+--
+ALTER TABLE `informedisciplina`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `interno`
+--
+ALTER TABLE `interno`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `internoactividad`
+--
+ALTER TABLE `internoactividad`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `personal`
+--
+ALTER TABLE `personal`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de la tabla `transferencia`
+--
+ALTER TABLE `transferencia`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `visita`
+--
+ALTER TABLE `visita`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `visitamultiple`
+--
+ALTER TABLE `visitamultiple`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `visitante`
+--
+ALTER TABLE `visitante`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
@@ -650,50 +753,50 @@ ALTER TABLE `visita_multiple`
 -- Filtros para la tabla `condena`
 --
 ALTER TABLE `condena`
-  ADD CONSTRAINT `condena_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID_Interno`),
-  ADD CONSTRAINT `condena_ibfk_2` FOREIGN KEY (`ID_Delito`) REFERENCES `delito` (`ID_Delito`),
-  ADD CONSTRAINT `condena_ibfk_3` FOREIGN KEY (`ID_Personal`) REFERENCES `personal` (`ID_Personal`);
+  ADD CONSTRAINT `condena_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID`),
+  ADD CONSTRAINT `condena_ibfk_2` FOREIGN KEY (`ID_Delito`) REFERENCES `delito` (`ID`),
+  ADD CONSTRAINT `condena_ibfk_3` FOREIGN KEY (`ID_Personal`) REFERENCES `personal` (`ID`);
 
 --
--- Filtros para la tabla `informe_disciplina`
+-- Filtros para la tabla `informedisciplina`
 --
-ALTER TABLE `informe_disciplina`
-  ADD CONSTRAINT `informe_disciplina_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID_Interno`);
+ALTER TABLE `informedisciplina`
+  ADD CONSTRAINT `informeDisciplina_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID`);
 
 --
 -- Filtros para la tabla `interno`
 --
 ALTER TABLE `interno`
-  ADD CONSTRAINT `interno_ibfk_1` FOREIGN KEY (`ID_Celda`) REFERENCES `celda` (`ID_Celda`);
+  ADD CONSTRAINT `interno_ibfk_1` FOREIGN KEY (`ID_Celda`) REFERENCES `celda` (`ID`);
 
 --
--- Filtros para la tabla `interno_actividad`
+-- Filtros para la tabla `internoactividad`
 --
-ALTER TABLE `interno_actividad`
-  ADD CONSTRAINT `interno_actividad_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID_Interno`),
-  ADD CONSTRAINT `interno_actividad_ibfk_2` FOREIGN KEY (`ID_Actividad`) REFERENCES `actividad` (`ID_Actividad`);
+ALTER TABLE `internoactividad`
+  ADD CONSTRAINT `internoActividad_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID`),
+  ADD CONSTRAINT `internoActividad_ibfk_2` FOREIGN KEY (`ID_Actividad`) REFERENCES `actividad` (`ID`);
 
 --
 -- Filtros para la tabla `transferencia`
 --
 ALTER TABLE `transferencia`
-  ADD CONSTRAINT `transferencia_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID_Interno`),
-  ADD CONSTRAINT `transferencia_ibfk_2` FOREIGN KEY (`ID_Celda_Origen`) REFERENCES `celda` (`ID_Celda`),
-  ADD CONSTRAINT `transferencia_ibfk_3` FOREIGN KEY (`ID_Celda_Destino`) REFERENCES `celda` (`ID_Celda`);
+  ADD CONSTRAINT `transferencia_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID`),
+  ADD CONSTRAINT `transferencia_ibfk_2` FOREIGN KEY (`ID_Celda_Origen`) REFERENCES `celda` (`ID`),
+  ADD CONSTRAINT `transferencia_ibfk_3` FOREIGN KEY (`ID_Celda_Destino`) REFERENCES `celda` (`ID`);
 
 --
 -- Filtros para la tabla `visita`
 --
 ALTER TABLE `visita`
-  ADD CONSTRAINT `visita_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID_Interno`),
-  ADD CONSTRAINT `visita_ibfk_2` FOREIGN KEY (`ID_Visitante`) REFERENCES `visitante` (`ID_Visitante`);
+  ADD CONSTRAINT `visita_ibfk_1` FOREIGN KEY (`ID_Interno`) REFERENCES `interno` (`ID`),
+  ADD CONSTRAINT `visita_ibfk_2` FOREIGN KEY (`ID_Visitante`) REFERENCES `visitante` (`ID`);
 
 --
--- Filtros para la tabla `visita_multiple`
+-- Filtros para la tabla `visitamultiple`
 --
-ALTER TABLE `visita_multiple`
-  ADD CONSTRAINT `visita_multiple_ibfk_1` FOREIGN KEY (`ID_Visita`) REFERENCES `visita` (`ID_Visita`),
-  ADD CONSTRAINT `visita_multiple_ibfk_2` FOREIGN KEY (`ID_Visitante`) REFERENCES `visitante` (`ID_Visitante`);
+ALTER TABLE `visitamultiple`
+  ADD CONSTRAINT `visitaMultiple_ibfk_1` FOREIGN KEY (`ID_Visita`) REFERENCES `visita` (`ID`),
+  ADD CONSTRAINT `visitaMultiple_ibfk_2` FOREIGN KEY (`ID_Visitante`) REFERENCES `visitante` (`ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

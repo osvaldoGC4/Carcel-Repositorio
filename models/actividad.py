@@ -1,13 +1,13 @@
 class Actividad:
-    def __init__(self, ID_Actividad=None, Nombre=None, Tipo=None, Horario=None):
-        self._ID_Actividad = ID_Actividad
+    def __init__(self, ID=None, Nombre=None, Tipo=None, Horario=None):
+        self._ID = ID
         self._Nombre = Nombre
         self._Tipo = Tipo
         self._Horario = Horario
 
     # Getters
-    def get_ID_Actividad(self):
-        return self._ID_Actividad
+    def get_ID(self):
+        return self._ID
 
     def get_Nombre(self):
         return self._Nombre
@@ -19,9 +19,9 @@ class Actividad:
         return self._Horario
 
     # Setters con validación
-    def set_ID_Actividad(self, ID_Actividad):
-        if isinstance(ID_Actividad, int) and ID_Actividad > 0:
-            self._ID_Actividad = ID_Actividad
+    def set_ID(self, ID):
+        if isinstance(ID, int) and ID > 0:
+            self._ID = ID
         else:
             raise ValueError("El ID de la actividad debe ser un entero positivo.")
 
@@ -37,7 +37,7 @@ class Actividad:
     # Método para convertir a diccionario
     def to_dict(self):
         return {
-            'ID_Actividad': self._ID_Actividad,
+            'ID': self._ID,
             'Nombre': self._Nombre,
             'Tipo': self._Tipo,
             'Horario': self._Horario

@@ -1,14 +1,14 @@
 class InformeDisciplina:
-    def __init__(self, ID_Informe=None, ID_Interno=None, Fecha=None, Descripcion=None, Sancion=None):
-        self._ID_Informe = ID_Informe
+    def __init__(self, ID=None, ID_Interno=None, Fecha=None, Descripcion=None, Sancion=None):
+        self._ID = ID
         self._ID_Interno = ID_Interno
         self._Fecha = Fecha
         self._Descripcion = Descripcion
         self._Sancion = Sancion
 
     # Getters
-    def get_ID_Informe(self):
-        return self._ID_Informe
+    def get_ID(self):
+        return self._ID
 
     def get_ID_Interno(self):
         return self._ID_Interno
@@ -23,8 +23,8 @@ class InformeDisciplina:
         return self._Sancion
 
     # Setters con validación
-    def set_ID_Informe(self, ID_Informe):
-        self._ID_Informe = ID_Informe
+    def set_ID(self, ID):
+        self._ID = ID
 
     def set_ID_Interno(self, ID_Interno):
         self._ID_Interno = ID_Interno
@@ -41,7 +41,7 @@ class InformeDisciplina:
     # Método para convertir a diccionario
     def to_dict(self):
         return {
-            'ID_Informe': self._ID_Informe,
+            'ID': self._ID,
             'ID_Interno': self._ID_Interno,
             'Fecha': self._Fecha,
             'Descripcion': self._Descripcion,

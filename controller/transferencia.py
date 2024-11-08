@@ -1,53 +1,22 @@
-import json
-import pyodbc
-from models.transferencia import Transferencia
-from common.crud import Crud
-from common.conexion import Conexion
-from common.utiles import Utiles
+from flask import Blueprint, request
+from controller.baseController import BaseController
 
-class TransferenciaController:
-    operacionCrud = None
+class TransferenciaController(BaseController):
+    def __init__(self, app):
+        super().__init__('transferencia')
+        transferencia_blueprint = Blueprint('transferencia', __name__)
+        transferencia_blueprint.add_url_rule('/', view_func=self.getAll, methods=["GET"])
+        transferencia_blueprint.add_url_rule('/<int:id>', view_func=self.getById, methods=["GET"])
+        transferencia_blueprint.add_url_rule('/', view_func=self.create, methods=["POST"])
+        transferencia_blueprint.add_url_rule('/<int:id>', view_func=self.update_route, methods=["PATCH"])
+        transferencia_blueprint.add_url_rule('/<int:id>', view_func=self.delete_route, methods=["DELETE"])
+        app.register_blueprint(transferencia_blueprint, url_prefix='/transferencia')
 
-    def __init__(self):
-        self.operacionCrud = Crud()
-        self.show = Utiles()
+    # Rutas de actualización y eliminación que admiten parámetros adicionales
+    def update_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.update(id, extra_params)
 
-    def crear_transferencia(self, nueva_transferencia: Transferencia):
-        transferencia_dict = nueva_transferencia.to_dict()
-        transferencia_json = json.dumps(transferencia_dict)
-        if self.operacionCrud.execInsert("transferencia", transferencia_json):
-            print(f"Transferencia {nueva_transferencia.get_ID_Transferencia()} creada con éxito.")
-        else:
-            print(f"Problemas al insertar Transferencia para el Interno {nueva_transferencia.get_ID_Interno()}.")
-
-    def obtener_transferencias(self):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            print("Ejecutando la consulta para obtener transferencias...")
-            respuesta = self.operacionCrud.execSelect('transferencia', '*', '')
-            self.show.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def obtener_transferencia(self, ID_Transferencia):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            respuesta = self.operacionCrud.execSelect('transferencia', '*', '{"where": "ID_Transferencia = ' + str(ID_Transferencia) + '"}')
-            self.show.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def actualizar_transferencia(self, editar_transferencia: Transferencia):
-        transferencia_dict = editar_transferencia.to_dict()
-        transferencia_json = json.dumps(transferencia_dict)
-        self.operacionCrud.execUpdate('transferencia', transferencia_json, '{"where": "ID_Transferencia = ' + str(editar_transferencia.get_ID_Transferencia()) + '"}')
-
-    def eliminar_transferencia(self, ID_Transferencia):
-        self.operacionCrud.execDelete('transferencia', f'ID_Transferencia = {ID_Transferencia}')
-
+    def delete_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.delete(id, extra_params)

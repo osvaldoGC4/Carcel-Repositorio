@@ -1,14 +1,14 @@
 
 class Celda:
-    def __init__(self, ID_Celda=None, Ubicacion=None, Capacidad=None, Estado=None):
-        self._ID_Celda = ID_Celda
+    def __init__(self, ID=None, Ubicacion=None, Capacidad=None, Estado=None):
+        self._ID = ID
         self._Ubicacion = Ubicacion
         self._Capacidad = Capacidad
         self._Estado = Estado
 
     # Métodos Getters
-    def get_ID_Celda(self):
-        return self._ID_Celda
+    def get_ID(self):
+        return self._ID
 
     def get_Ubicacion(self):
         return self._Ubicacion
@@ -20,9 +20,9 @@ class Celda:
         return self._Estado
 
     # Métodos Setters con validación
-    def set_ID_Celda(self, ID_Celda):
-        if isinstance(ID_Celda, int) and ID_Celda > 0:
-            self._ID_Celda = ID_Celda
+    def set_ID(self, ID):
+        if isinstance(ID, int) and ID > 0:
+            self._ID = ID
         else:
             raise ValueError("El ID de la celda debe ser un entero positivo.")
 
@@ -43,13 +43,13 @@ class Celda:
 
     # Método para representar el objeto
     def __str__(self):
-        return f"Celda(id: {self._ID_Celda}, Ubicacion: {self._Ubicacion}, Capacidad: {self._Capacidad}, Estado: {self._Estado})"
+        return f"Celda(id: {self._ID}, Ubicacion: {self._Ubicacion}, Capacidad: {self._Capacidad}, Estado: {self._Estado})"
 
 
       # Método para convertir el objeto en un diccionario
     def to_dict(self):
         return {
-            'ID_Celda': self._ID_Celda,
+            'ID': self._ID,
             'Ubicacion': self._Ubicacion,
             'Capacidad': self._Capacidad,
             'Estado': self._Estado
