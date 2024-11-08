@@ -84,11 +84,8 @@ class BaseController:
             entidad_data = request.json
             entidad_json = json.dumps(entidad_data)
 
-            # Configurar la cláusula WHERE
-            where_clause = json.dumps({"where": f"ID = {id}"})
-
             # Llamar al SP con los parámetros
-            dataResponse = self.conexion.execSPResult(f"sp_Update{self.entidad_nombre}", [entidad_json, where_clause])
+            dataResponse = self.conexion.execSPResult(f"sp_Update{self.entidad_nombre}", [entidad_json, id])
 
             # Manejar el posible mensaje de error devuelto por el SP
             if dataResponse and 'Status' in dataResponse[0] and dataResponse[0]['Status'] == 'Error':
