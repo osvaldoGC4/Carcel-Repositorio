@@ -24,10 +24,6 @@ class Conexion:
         except pyodbc.Error as e:
             print(f"Error al conectar a la base de datos: {e}")
 
-    # def commit(self):
-    #     if self.conexion:
-    #         self.conexion.commit()
-
     def cerrar(self):
         try:
             if self.cursor:

@@ -37,7 +37,6 @@ class BaseController:
             self.conexion.cerrar()  # Asegúrate de cerrar la conexión, que incluye el cursor
         return jsonify(respuesta)
 
-
     def create(self):
         respuesta = {}
         try:
@@ -45,14 +44,11 @@ class BaseController:
             entidad_data = request.json
             if not entidad_data:
                 raise ValueError("Los datos de la entidad están vacíos.")
-
-            # Convertir los datos del JSON a un formato que el SP puede manejar
+            
             entidad_json = json.dumps(entidad_data)
 
             # Conectar antes de ejecutar el SP
             self.conexion.conectar()
-            
-            # Llamar al SP con el JSON de datos
             dataResponse = self.conexion.execSPResult(f"sp_Insert{self.entidad_nombre}", [entidad_json])
 
             # Manejar posibles errores devueltos por el SP
@@ -72,7 +68,6 @@ class BaseController:
                 self.conexion.cerrar()  # Asegúrate de que se cierre la conexión
             except Exception as e:
                 print(f"Error al cerrar la conexión: {str(e)}")
-
         return jsonify(respuesta)
 
 
