@@ -25,11 +25,13 @@ class Conexion:
             print(f"Error al conectar a la base de datos: {e}")
 
     def cerrar(self):
-        if self.cursor:
-            self.cursor.close()
-        if self.conexion:
-            self.conexion.close()
-            # print("Conexión cerrada.")
+        try:
+            if self.cursor:
+                self.cursor.close()  # Cierra el cursor
+            if self.conexion:
+                self.conexion.close()  # Cierra la conexión
+        except pyodbc.Error as e:
+            print(f"Error al cerrar la conexión: {e}")
 
     def execSP(self, spName, params):
         try:
@@ -80,10 +82,12 @@ class Conexion:
             columns = [column[0] for column in self.cursor.description]  # Obtener los nombres de las columnas
         
             resultado = self.cursor.fetchall()
+            
             return [dict(zip(columns, row)) for row in resultado]
         except pyodbc.Error as e:
             print(f"Error al ejecutar el SP: {e}")
             return []
+        
         
     
     

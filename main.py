@@ -173,7 +173,7 @@ from models.delito import Delito
 
 if __name__ == "__main__":
     app = flask.Flask(__name__)
-    # _CeldaController = CeldaController(app)
+    _CeldaController = CeldaController(app)
     # _InternoController = InternoController(app)
     # _ActividadController = ActividadController(app)
     _PersonalController = PersonalController(app)

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-11-2024 a las 17:26:43
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Tiempo de generación: 08-11-2024 a las 21:56:11
+-- Versión del servidor: 10.4.19-MariaDB
+-- Versión de PHP: 8.0.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,212 +25,21 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ContarReclusosPorCelda` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ContarReclusosPorCelda` ()  BEGIN
     SELECT 
         c.Ubicacion,
-        COUNT(i.ID) AS Total_Reclusos
+        COUNT(i.ID_Interno) AS Total_Reclusos
     FROM 
         celda c
     LEFT JOIN 
-        interno i ON c.ID_Celda = i.ID
+        interno i ON c.ID_Celda = i.ID_Celda
     GROUP BY 
         c.ID_Celda;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalSelect` (IN `tableName` VARCHAR(255), IN `columnList` VARCHAR(255), IN `options` JSON)   BEGIN
-    DECLARE sqlStatement TEXT;
-    DECLARE whereClause TEXT DEFAULT '';
-    DECLARE orderByClause TEXT DEFAULT '';
-    DECLARE groupByClause TEXT DEFAULT '';
-    DECLARE havingClause TEXT DEFAULT '';
-
-    -- Construir la cláusula WHERE si existe
-    IF JSON_UNQUOTE(JSON_EXTRACT(options, '$.where')) IS NOT NULL THEN
-        SET whereClause = CONCAT(' WHERE ', JSON_UNQUOTE(JSON_EXTRACT(options, '$.where')));
-    END IF;
-
-    -- Construir la cláusula ORDER BY si existe
-    IF JSON_UNQUOTE(JSON_EXTRACT(options, '$.order_by')) IS NOT NULL THEN
-        SET orderByClause = CONCAT(' ORDER BY ', JSON_UNQUOTE(JSON_EXTRACT(options, '$.order_by')));
-    END IF;
-
-    -- Construir la cláusula GROUP BY si existe
-    IF JSON_UNQUOTE(JSON_EXTRACT(options, '$.group_by')) IS NOT NULL THEN
-        SET groupByClause = CONCAT(' GROUP BY ', JSON_UNQUOTE(JSON_EXTRACT(options, '$.group_by')));
-    END IF;
-
-    -- Construir la cláusula HAVING si existe
-    IF JSON_UNQUOTE(JSON_EXTRACT(options, '$.having')) IS NOT NULL THEN
-        SET havingClause = CONCAT(' HAVING ', JSON_UNQUOTE(JSON_EXTRACT(options, '$.having')));
-    END IF;
-
-    -- Construir la consulta SQL dinámica
-    SET sqlStatement = CONCAT('SELECT ', columnList, ' FROM ', tableName, whereClause, groupByClause, havingClause, orderByClause);
-
-    -- Ejecutar la consulta
-    PREPARE stmt FROM sqlStatement;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicalUpdate` (IN `tableName` VARCHAR(255), IN `columnsAndValues` JSON, IN `options` JSON)   BEGIN
-    DECLARE sqlStatement TEXT;
-    DECLARE setClause TEXT DEFAULT '';
-    DECLARE whereClause TEXT DEFAULT '';
-    DECLARE errMsg TEXT;
-
-    -- Validar que la tabla existe
-    IF (SELECT COUNT(*) FROM information_schema.tables 
-        WHERE table_name = tableName AND table_schema = DATABASE()) = 0 THEN
-        SET errMsg = CONCAT('La tabla "', tableName, '" no existe.');
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errMsg;
-    END IF;
-
-    -- Inicializar la cláusula SET
-    SET setClause = '';
-
-    -- Obtener las columnas de la tabla
-    SELECT GROUP_CONCAT(column_name SEPARATOR ', ')
-    INTO @columnList
-    FROM information_schema.columns
-    WHERE table_name = tableName AND table_schema = DATABASE();
-
-    -- Verificar que se hayan obtenido columnas
-    IF @columnList IS NULL THEN
-        SET errMsg = CONCAT('No se encontraron columnas en la tabla "', tableName, '".');
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errMsg;
-    END IF;
-
-    -- Construir la cláusula SET solo para las columnas que se envían
-    SET @sqlSetClause = (
-        SELECT GROUP_CONCAT(CONCAT(column_name, ' = ', 
-            CASE 
-                WHEN JSON_UNQUOTE(JSON_EXTRACT(columnsAndValues, CONCAT('$.', column_name))) IS NULL THEN 'NULL'
-                ELSE QUOTE(JSON_UNQUOTE(JSON_EXTRACT(columnsAndValues, CONCAT('$.', column_name))))
-            END
-        ) SEPARATOR ', ')
-        FROM information_schema.columns
-        WHERE table_name = tableName AND table_schema = DATABASE()
-          AND JSON_UNQUOTE(JSON_EXTRACT(columnsAndValues, CONCAT('$.', column_name))) IS NOT NULL
-    );
-
-    -- Validar que se hayan construido valores para el SET
-    IF @sqlSetClause IS NULL OR @sqlSetClause = '' THEN
-        SET errMsg = 'No se proporcionaron valores válidos para el UPDATE.';
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errMsg;
-    END IF;
-
-    -- Construir la cláusula WHERE si existe
-    IF JSON_UNQUOTE(JSON_EXTRACT(options, '$.where')) IS NOT NULL THEN
-        SET whereClause = CONCAT(' WHERE ', JSON_UNQUOTE(JSON_EXTRACT(options, '$.where')));
-    END IF;
-
-    -- Crear la sentencia SQL dinámica
-    SET sqlStatement = CONCAT('UPDATE ', tableName, ' SET ', @sqlSetClause, whereClause);
-
-    -- Preparar y ejecutar la declaración
-    PREPARE stmt FROM sqlStatement;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicDelete` (IN `tableName` VARCHAR(255), IN `whereCondition` TEXT, IN `orderBy` TEXT, IN `groupBy` TEXT, IN `havingCondition` TEXT)   BEGIN
-    DECLARE sqlStatement TEXT;  -- Declaración SQL para construir la consulta
-    DECLARE errMsg TEXT;        -- Mensaje de error
-
-    -- Validar que la tabla existe
-    IF (SELECT COUNT(*) FROM information_schema.tables 
-        WHERE table_name = tableName AND table_schema = DATABASE()) = 0 THEN
-        SET errMsg = CONCAT('La tabla "', tableName, '" no existe.');
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errMsg;
-    END IF;
-
-    -- Construir la sentencia SQL DELETE
-    SET sqlStatement = CONCAT('DELETE FROM ', tableName);
-
-    -- Agregar WHERE si existe
-    IF whereCondition IS NOT NULL AND whereCondition != '' THEN
-        SET sqlStatement = CONCAT(sqlStatement, ' WHERE ', whereCondition);
-    END IF;
-
-    -- Agregar GROUP BY si existe
-    IF groupBy IS NOT NULL AND groupBy != '' THEN
-        SET sqlStatement = CONCAT(sqlStatement, ' GROUP BY ', groupBy);
-    END IF;
-
-    -- Agregar HAVING si existe
-    IF havingCondition IS NOT NULL AND havingCondition != '' THEN
-        SET sqlStatement = CONCAT(sqlStatement, ' HAVING ', havingCondition);
-    END IF;
-
-    -- Agregar ORDER BY si existe
-    IF orderBy IS NOT NULL AND orderBy != '' THEN
-        SET sqlStatement = CONCAT(sqlStatement, ' ORDER BY ', orderBy);
-    END IF;
-
-    -- Preparar y ejecutar la consulta dinámica
-    PREPARE stmt FROM sqlStatement;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-
-    -- Opción de agregar un mensaje de éxito
-    -- SELECT CONCAT('Consulta ejecutada: ', sqlStatement) AS Query_Executed;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DynamicInsert` (IN `tableName` VARCHAR(255), IN `jsonData` JSON)   BEGIN
-    DECLARE sqlStatement TEXT;
-    DECLARE columns TEXT;
-    DECLARE valueList TEXT;  -- Cambié el nombre de la variable
-    DECLARE errMsg TEXT;
-
-    -- Validar que la tabla existe
-    IF (SELECT COUNT(*) FROM information_schema.tables 
-        WHERE table_name = tableName AND table_schema = DATABASE()) = 0 THEN
-        SET errMsg = CONCAT('La tabla "', tableName, '" no existe.');
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errMsg;
-    END IF;
-
-    -- Construir la lista de columnas
-    SET columns = (SELECT GROUP_CONCAT(column_name SEPARATOR ', ')
-                   FROM information_schema.columns
-                   WHERE table_name = tableName AND table_schema = DATABASE());
-
-    -- Validar que se hayan obtenido columnas
-    IF columns IS NULL THEN
-        SET errMsg = CONCAT('No se encontraron columnas en la tabla "', tableName, '".');
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errMsg;
-    END IF;
-
-    -- Construir la lista de valores usando los datos del JSON
-    SET valueList = (SELECT GROUP_CONCAT(
-                        CASE 
-                            WHEN JSON_UNQUOTE(JSON_EXTRACT(jsonData, CONCAT('$.', column_name))) IS NULL THEN 'NULL'
-                            ELSE CONCAT('"', JSON_UNQUOTE(JSON_EXTRACT(jsonData, CONCAT('$.', column_name))), '"')
-                        END
-                        SEPARATOR ', ')
-                    FROM information_schema.columns
-                    WHERE table_name = tableName AND table_schema = DATABASE());
-
-    -- Validar que se hayan obtenido valores
-    IF valueList IS NULL OR valueList = '' THEN
-        SET errMsg = 'No se proporcionaron valores válidos para el INSERT.';
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errMsg;
-    END IF;
-
-    -- Crear la sentencia SQL dinámica
-    SET sqlStatement = CONCAT('INSERT INTO ', tableName, ' (', columns, ') VALUES (', valueList, ')');
-
-    -- Preparar y ejecutar la declaración
-    PREPARE stmt FROM sqlStatement;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCondenaPorInternoYDelito` (IN `p_ID_Interno` INT, IN `p_ID_Delito` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCondenaPorInternoYDelito` (IN `p_ID_Interno` INT, IN `p_ID_Delito` INT)  BEGIN
     SELECT 
-        c.ID,
+        c.ID_Condena,
         c.Fecha_Inicio,
         c.Duracion,
         c.Tipo,
@@ -239,11 +48,143 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCondenaPorInternoYDelito` (I
     FROM 
         condena c
     INNER JOIN 
-        interno i ON c.ID_Interno = i.ID
+        interno i ON c.ID_Interno = i.ID_Interno
     INNER JOIN 
-        delito d ON c.ID_Delito = d.ID
+        delito d ON c.ID_Delito = d.ID_Delito
     WHERE 
-        c.ID_Interno = p_ID_Interno AND c.ID = p_ID_Delito;
+        c.ID_Interno = p_ID_Interno AND c.ID_Delito = p_ID_Delito;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteCelda` (IN `p_condition` VARCHAR(255))  BEGIN
+    SET @query = CONCAT('DELETE FROM celda WHERE ', p_condition);
+    PREPARE stmt FROM @query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertCelda` (IN `p_celda_json` JSON)  BEGIN
+    DECLARE v_id_celda INT;
+    DECLARE v_ubicacion VARCHAR(255);
+    DECLARE v_capacidad INT;
+    DECLARE v_estado VARCHAR(50);
+
+    -- Extraer los valores del JSON recibido
+    SET v_id_celda = JSON_UNQUOTE(JSON_EXTRACT(p_celda_json, '$.ID'));
+    SET v_ubicacion = JSON_UNQUOTE(JSON_EXTRACT(p_celda_json, '$.Ubicacion'));
+    SET v_capacidad = JSON_UNQUOTE(JSON_EXTRACT(p_celda_json, '$.Capacidad'));
+    SET v_estado = JSON_UNQUOTE(JSON_EXTRACT(p_celda_json, '$.Estado'));
+
+    -- Verificar si se proporcionó un ID
+    IF v_id_celda IS NOT NULL THEN
+        -- Verificar si ya existe una celda con el mismo ID
+        IF EXISTS (SELECT 1 FROM celda WHERE ID = v_id_celda) THEN
+            -- Lanzar un error personalizado, pero devolverlo como un SELECT
+            SELECT 'Error' AS Status, 'El ID_Celda ya existe. No se puede insertar.' AS Message;
+        ELSE
+            -- Insertar nueva celda con el ID proporcionado
+            INSERT INTO celda (ID, Ubicacion, Capacidad, Estado) 
+            VALUES (v_id_celda, v_ubicacion, v_capacidad, v_estado);
+            COMMIT;
+            -- Devolver la fila insertada
+            SELECT * FROM celda WHERE ID = v_id_celda;
+        END IF;
+    ELSE
+        -- Insertar nueva celda sin ID (ID autogenerado si es una PK auto_increment)
+        INSERT INTO celda (Ubicacion, Capacidad, Estado) 
+        VALUES (v_ubicacion, v_capacidad, v_estado);
+		COMMIT;
+        -- Obtener el ID generado automáticamente y devolver la fila insertada
+        SET v_id_celda = LAST_INSERT_ID();
+        SELECT * FROM celda WHERE ID = v_id_celda;
+    END IF;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectCelda` (IN `p_id` INT)  BEGIN
+    IF p_id IS NULL OR p_id = 0 THEN
+        -- Si no se pasa un ID o se pasa un valor que represente "todos"
+        SELECT * FROM celda;
+    ELSE
+        -- Si se pasa un ID válido
+        SELECT * FROM celda WHERE ID = p_id;
+    END IF;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Updatecelda` (IN `p_UpdateJSON` JSON, IN `p_ConditionJSON` JSON)  BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Manejo de errores SQL
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Error al ejecutar la actualización. Verifique los datos.';
+    END;
+
+    DECLARE EXIT HANDLER FOR SQLWARNING
+    BEGIN
+        -- Manejo de advertencias SQL
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Advertencia durante la ejecución.';
+    END;
+
+    START TRANSACTION;
+
+    -- Depuración: Mostrar el JSON de condición
+    SELECT CONCAT('Condición WHERE: ', JSON_UNQUOTE(JSON_EXTRACT(p_ConditionJSON, '$.where')));
+
+    -- Construir la cláusula WHERE a partir del JSON
+    SET @where_clause = JSON_UNQUOTE(JSON_EXTRACT(p_ConditionJSON, '$.where'));
+
+    -- Verificar si existe un registro con la condición especificada
+    SET @check_sql = CONCAT('SELECT COUNT(*) INTO @row_exists FROM celda WHERE ', @where_clause);
+    PREPARE stmt_check FROM @check_sql;
+    EXECUTE stmt_check;
+    DEALLOCATE PREPARE stmt_check;
+
+    IF @row_exists = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se encontró un registro con la condición especificada.';
+    END IF;
+
+    -- Construir dinámicamente la cláusula SET para la actualización
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(
+                COLUMN_NAME, ' = ', 
+                QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))
+            ) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'celda'
+          AND COLUMN_NAME NOT IN (REPLACE(JSON_UNQUOTE(JSON_EXTRACT(p_ConditionJSON, '$.where')), 'ID = ', ''))
+    );
+
+    -- Depuración: Ver la cláusula SET generada
+    SELECT CONCAT('Cláusula SET: ', @set_clause);
+
+    -- Construir la consulta de actualización
+    SET @update_sql = CONCAT('UPDATE celda SET ', @set_clause, ' WHERE ', @where_clause);
+    -- Depuración: Ver la consulta generada
+    SELECT CONCAT('Consulta SQL Generada: ', @update_sql);
+
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    -- Verificar si se actualizó algún registro
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        -- Retornar el registro actualizado
+        SET @result_sql = CONCAT('SELECT * FROM celda WHERE ', @where_clause);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
 END$$
 
 DELIMITER ;
@@ -259,7 +200,7 @@ CREATE TABLE `actividad` (
   `Nombre` varchar(255) DEFAULT NULL,
   `Tipo` varchar(255) DEFAULT NULL COMMENT 'Educativa, Recreativa, Laboral',
   `Horario` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `actividad`
@@ -288,7 +229,7 @@ CREATE TABLE `celda` (
   `Ubicacion` varchar(255) DEFAULT NULL,
   `Capacidad` int(11) DEFAULT NULL,
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Ocupada, Disponible'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `celda`
@@ -304,7 +245,8 @@ INSERT INTO `celda` (`ID`, `Ubicacion`, `Capacidad`, `Estado`) VALUES
 (7, 'Zona Baja', 80, 'Disponible'),
 (8, 'Zona Interior', 55, 'Ocupada'),
 (9, 'Zona de Aislamiento', 15, 'Disponible'),
-(10, 'Zona Familiar', 20, 'Ocupada');
+(10, 'Zona Familiar', 20, 'Ocupada'),
+(11, 'Choco', 24, 'Disponible');
 
 -- --------------------------------------------------------
 
@@ -320,7 +262,7 @@ CREATE TABLE `condena` (
   `Duracion` int(11) DEFAULT NULL COMMENT 'En meses',
   `Tipo` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Permanente, Temporal',
   `ID_Personal` int(11) DEFAULT NULL COMMENT 'Responsable de la condena'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `condena`
@@ -348,7 +290,7 @@ CREATE TABLE `delito` (
   `ID` int(11) NOT NULL,
   `Tipo` varchar(255) DEFAULT NULL,
   `Descripcion` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `delito`
@@ -378,7 +320,7 @@ CREATE TABLE `informedisciplina` (
   `Fecha` date DEFAULT NULL,
   `Descripcion` text DEFAULT NULL,
   `Sancion` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `informedisciplina`
@@ -409,7 +351,7 @@ CREATE TABLE `interno` (
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Activo, Liberado, Transferido',
   `ID_Celda` int(11) DEFAULT NULL,
   `Fecha_Liberacion` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `interno`
@@ -438,7 +380,7 @@ CREATE TABLE `internoactividad` (
   `ID_Interno` int(11) NOT NULL,
   `ID_Actividad` int(11) NOT NULL,
   `Fecha_Actividad` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `internoactividad`
@@ -468,7 +410,7 @@ CREATE TABLE `personal` (
   `Rol` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Guardia, Administrador',
   `Horario` varchar(255) DEFAULT NULL,
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Activo, Inactivo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `personal`
@@ -499,7 +441,7 @@ CREATE TABLE `transferencia` (
   `ID_Celda_Destino` int(11) DEFAULT NULL,
   `Fecha` date DEFAULT NULL,
   `Motivo` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `transferencia`
@@ -530,7 +472,7 @@ CREATE TABLE `visita` (
   `Fecha` date DEFAULT NULL,
   `Hora_Inicio` time DEFAULT NULL,
   `Duracion` int(11) DEFAULT NULL COMMENT 'En minutos'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `visita`
@@ -550,7 +492,7 @@ CREATE TABLE `visitamultiple` (
   `ID_Visita` int(11) NOT NULL,
   `ID_Visitante` int(11) NOT NULL,
   `Observacion` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `visitamultiple`
@@ -570,7 +512,7 @@ CREATE TABLE `visitante` (
   `Nombre` varchar(255) DEFAULT NULL,
   `Relacion` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Familiar, Abogado',
   `Documento` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `visitante`
@@ -683,7 +625,7 @@ ALTER TABLE `actividad`
 -- AUTO_INCREMENT de la tabla `celda`
 --
 ALTER TABLE `celda`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `condena`
