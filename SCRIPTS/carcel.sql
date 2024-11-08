@@ -109,7 +109,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectCelda` (IN `p_id` INT)  BE
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Updatecelda` (IN `p_UpdateJSON` JSON, IN `p_ConditionJSON` JSON)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Updatecelda` (IN `p_UpdateJSON` JSON, IN `p_Id` int)  BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         -- Manejo de errores SQL
@@ -127,18 +127,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Updatecelda` (IN `p_UpdateJSON` 
     END;
 
     START TRANSACTION;
-
-    -- Depuración: Mostrar el JSON de condición
-    SELECT CONCAT('Condición WHERE: ', JSON_UNQUOTE(JSON_EXTRACT(p_ConditionJSON, '$.where')));
-
-    -- Construir la cláusula WHERE a partir del JSON
-    SET @where_clause = JSON_UNQUOTE(JSON_EXTRACT(p_ConditionJSON, '$.where'));
-
-    -- Verificar si existe un registro con la condición especificada
-    SET @check_sql = CONCAT('SELECT COUNT(*) INTO @row_exists FROM celda WHERE ', @where_clause);
-    PREPARE stmt_check FROM @check_sql;
-    EXECUTE stmt_check;
-    DEALLOCATE PREPARE stmt_check;
 
     IF @row_exists = 0 THEN
         ROLLBACK;

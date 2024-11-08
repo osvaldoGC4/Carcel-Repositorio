@@ -10,16 +10,11 @@ from controller.visita import VisitaController
 from controller.visitante import VisitanteController
 from controller.visitaMultiple import VisitaMultipleController
 from controller.delito import DelitoController
+from controller.internoActividad import InternoActividadController
+from controller.condena import CondenaController
+from controller.informeDisciplina import InformeDisciplinaController
+
 from controller.reglasN import ReglasNController
-from models.celda import Celda
-from models.interno import Interno
-from models.actividad import Actividad
-from models.personal import Personal
-from models.transferencia import Transferencia
-from models.visita import Visita
-from models.visitante import Visitante
-from models.visitaMultiple import VisitaMultiple
-from models.delito import Delito
 
 
 # def menu_principal():
@@ -173,15 +168,18 @@ from models.delito import Delito
 
 if __name__ == "__main__":
     app = flask.Flask(__name__)
-    _CeldaController = CeldaController(app)
-    # _InternoController = InternoController(app)
-    # _ActividadController = ActividadController(app)
-    _PersonalController = PersonalController(app)
-    _TransferenciaController = TransferenciaController(app)
-    _VisitaController = VisitaController(app)
-    _VisitanteController = VisitanteController(app)
-    _VisitaMultipleController = VisitaMultipleController(app)
-    # _DelitoController = DelitoController(app)
+    CeldaController(app)
+    InternoController(app)
+    ActividadController(app)
+    PersonalController(app)
+    TransferenciaController(app)
+    VisitaController(app)
+    VisitanteController(app)
+    VisitaMultipleController(app)
+    DelitoController(app)
+    InternoActividadController(app)
+    InformeDisciplinaController(app)
+    CondenaController(app)
     # _ReglasNController = ReglasNController(app)
     app.run('localhost', 4040);
 

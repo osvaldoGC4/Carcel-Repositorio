@@ -1,56 +1,24 @@
-import json
-import pyodbc
-from models.delito import Delito
-from common.crud import Crud
-from common.conexion import Conexion
-from common.utiles import Utiles
+from flask import Blueprint, request
+from controller.baseController import BaseController
 
-class DelitoController:
+class DelitoController(BaseController):
     operacionCrud = None
 
     def __init__(self, app):
-        self.operacionCrud = Crud()
-        app.add_url_rule('/visitantes', view_func=self.getAll, methods=["GET"])
-        app.add_url_rule('/visitante/<int:id>', view_func=self.getById, methods=["GET"])
-        app.add_url_rule('/visitante', view_func=self.create, methods=["POST"])
-        app.add_url_rule('/visitante', view_func=self.update, methods=["PATCH"])
-        app.add_url_rule('/visitante/<int:id>', view_func=self.delete, methods=["DELETE"])
+        super().__init__('delito')
+        delito_blueprint = Blueprint('delito', __name__)
+        delito_blueprint.add_url_rule('/', view_func=self.getAll, methods=["GET"])
+        delito_blueprint.add_url_rule('/<int:id>', view_func=self.getById, methods=["GET"])
+        delito_blueprint.add_url_rule('/', view_func=self.create, methods=["POST"])
+        delito_blueprint.add_url_rule('/<int:id>', view_func=self.update_route, methods=["PATCH"])
+        delito_blueprint.add_url_rule('/<int:id>', view_func=self.delete_route, methods=["DELETE"])
+        app.register_blueprint(delito_blueprint, url_prefix='/delito')
 
-    def crear_delito(self, nuevo_delito: Delito):
-        delito_dict = nuevo_delito.to_dict()
-        delito_json = json.dumps(delito_dict)
-        if self.operacionCrud.execInsert("delito", delito_json):
-            print(f"Delito {nuevo_delito.get_ID_Delito()} creado con éxito.")
-        else:
-            print(f"Problemas al insertar Delito {nuevo_delito.get_Tipo()}.")
+     # Rutas de actualización y eliminación que admiten parámetros adicionales
+    def update_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.update(id, extra_params)
 
-    def obtener_delitos(self):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            print("Ejecutando la consulta para obtener delitos...")
-            respuesta = self.operacionCrud.execSelect('delito', '*', '')
-            Utiles.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def obtener_delito(self, ID_Delito):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            respuesta = self.operacionCrud.execSelect('delito', '*', '{"where": "ID_Delito = ' + str(ID_Delito) + '"}')
-            Utiles.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def actualizar_delito(self, editar_delito: Delito):
-        delito_dict = editar_delito.to_dict()
-        delito_json = json.dumps(delito_dict)
-        self.operacionCrud.execUpdate('delito', delito_json, '{"where": "ID_Delito = ' + str(editar_delito.get_ID_Delito()) + '"}')
-
-    def eliminar_delito(self, ID_Delito):
-        self.operacionCrud.execDelete('delito', f'ID_Delito = {ID_Delito}')
+    def delete_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.delete(id, extra_params)

@@ -1,58 +1,24 @@
-import json
-import pyodbc
-from models.informeDisciplina import InformeDisciplina
-from common.crud import Crud
-from common.conexion import Conexion
-from common.utiles import Utiles
+from flask import Blueprint, request
+from controller.baseController import BaseController
 
-class InformeDisciplinaController:
+class InformeDisciplinaController(BaseController):
     operacionCrud = None
 
     def __init__(self, app):
-        self.operacionCrud = Crud()
-        app.add_url_rule('/visitantes', view_func=self.getAll, methods=["GET"])
-        app.add_url_rule('/visitante/<int:id>', view_func=self.getById, methods=["GET"])
-        app.add_url_rule('/visitante', view_func=self.create, methods=["POST"])
-        app.add_url_rule('/visitante', view_func=self.update, methods=["PATCH"])
-        app.add_url_rule('/visitante/<int:id>', view_func=self.delete, methods=["DELETE"])
+        super().__init__('informeDisciplina')
+        informeDisciplina_blueprint = Blueprint('informeDisciplina', __name__)
+        informeDisciplina_blueprint.add_url_rule('/', view_func=self.getAll, methods=["GET"])
+        informeDisciplina_blueprint.add_url_rule('/<int:id>', view_func=self.getById, methods=["GET"])
+        informeDisciplina_blueprint.add_url_rule('/', view_func=self.create, methods=["POST"])
+        informeDisciplina_blueprint.add_url_rule('/<int:id>', view_func=self.update_route, methods=["PATCH"])
+        informeDisciplina_blueprint.add_url_rule('/<int:id>', view_func=self.delete_route, methods=["DELETE"])
+        app.register_blueprint(informeDisciplina_blueprint, url_prefix='/informeDisciplina')
 
-    def crear_informe(self, nuevo_informe: InformeDisciplina):
-        informe_dict = nuevo_informe.to_dict()
-        informe_json = json.dumps(informe_dict)
-        if self.operacionCrud.execInsert("informe_disciplina", informe_json):
-            print(f"Informe {nuevo_informe.get_ID_Informe()} creado con éxito.")
-        else:
-            print(f"Problemas al insertar Informe para el Interno {nuevo_informe.get_ID_Interno()}.")
+     # Rutas de actualización y eliminación que admiten parámetros adicionales
+    def update_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.update(id, extra_params)
 
-    def obtener_informes(self):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            print("Ejecutando la consulta para obtener informes disciplinarios...")
-            respuesta = self.operacionCrud.execSelect('informe_disciplina', '*', '')
-            Utiles.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def obtener_informe(self, ID_Informe):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            respuesta = self.operacionCrud.execSelect('informe_disciplina', '*', '{"where": "ID_Informe = ' + str(ID_Informe) + '"}')
-            Utiles.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def actualizar_informe(self, editar_informe: InformeDisciplina):
-        informe_dict = editar_informe.to_dict()
-        informe_json = json.dumps(informe_dict)
-        self.operacionCrud.execUpdate('informe_disciplina', informe_json, '{"where": "ID_Informe = ' + str(editar_informe.get_ID_Informe()) + '"}')
-
-    def eliminar_informe(self, ID_Informe):
-        self.operacionCrud.execDelete('informe_disciplina', f'ID_Informe = {ID_Informe}')
-
-
+    def delete_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.delete(id, extra_params)

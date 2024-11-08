@@ -1,58 +1,24 @@
-import json
-import pyodbc
-from models.interno import Interno
-from common.crud import Crud
-from common.conexion import Conexion
-from common.utiles import Utiles
+from flask import Blueprint, request
+from controller.baseController import BaseController
 
-class InternoController:
+class InternoController(BaseController):
     operacionCrud = None
 
     def __init__(self, app):
-        self.operacionCrud = Crud()
-        app.add_url_rule('/visitantes', view_func=self.getAll, methods=["GET"])
-        app.add_url_rule('/visitante/<int:id>', view_func=self.getById, methods=["GET"])
-        app.add_url_rule('/visitante', view_func=self.create, methods=["POST"])
-        app.add_url_rule('/visitante', view_func=self.update, methods=["PATCH"])
-        app.add_url_rule('/visitante/<int:id>', view_func=self.delete, methods=["DELETE"])
+        super().__init__('interno')
+        interno_blueprint = Blueprint('interno', __name__)
+        interno_blueprint.add_url_rule('/', view_func=self.getAll, methods=["GET"])
+        interno_blueprint.add_url_rule('/<int:id>', view_func=self.getById, methods=["GET"])
+        interno_blueprint.add_url_rule('/', view_func=self.create, methods=["POST"])
+        interno_blueprint.add_url_rule('/<int:id>', view_func=self.update_route, methods=["PATCH"])
+        interno_blueprint.add_url_rule('/<int:id>', view_func=self.delete_route, methods=["DELETE"])
+        app.register_blueprint(interno_blueprint, url_prefix='/interno')
 
-    def crear_interno(self, nuevo_interno: Interno):
-        interno_dict = nuevo_interno.to_dict()
-        interno_json = json.dumps(interno_dict)
-        if self.operacionCrud.execInsert("interno", interno_json):
-            print(f"Interno {nuevo_interno.get_ID_Interno()} creado con éxito.")
-        else:
-            print(f"Problemas al insertar Interno {nuevo_interno.get_Nombre()}.")
+     # Rutas de actualización y eliminación que admiten parámetros adicionales
+    def update_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.update(id, extra_params)
 
-    def obtener_internos(self):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            print("Ejecutando la consulta para obtener internos...")
-            respuesta = self.operacionCrud.execSelect('interno', '*', '')
-            Utiles.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def obtener_interno(self, ID_Interno):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            respuesta = self.operacionCrud.execSelect('interno', '*', '{"where": "ID_Interno = ' + str(ID_Interno) + '"}')
-            Utiles.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def actualizar_interno(self, editar_interno: Interno):
-        interno_dict = editar_interno.to_dict()
-        interno_json = json.dumps(interno_dict)
-        self.operacionCrud.execUpdate('interno', interno_json, '{"where": "ID_Interno = ' + str(editar_interno.get_ID_Interno()) + '"}')
-
-    def eliminar_interno(self, ID_Interno):
-        self.operacionCrud.execDelete('interno', f'ID_Interno = {ID_Interno}')
-
-    
+    def delete_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.delete(id, extra_params)
