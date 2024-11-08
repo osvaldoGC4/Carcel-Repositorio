@@ -1,14 +1,14 @@
 class Personal:
-    def __init__(self, ID_Personal=None, Nombre=None, Rol=None, Horario=None, Estado=None):
-        self._ID_Personal = ID_Personal
+    def __init__(self, ID=None, Nombre=None, Rol=None, Horario=None, Estado=None):
+        self._ID = ID
         self._Nombre = Nombre
         self._Rol = Rol
         self._Horario = Horario
         self._Estado = Estado
 
     # Getters
-    def get_ID_Personal(self):
-        return self._ID_Personal
+    def get_ID(self):
+        return self._ID
 
     def get_Nombre(self):
         return self._Nombre
@@ -23,8 +23,8 @@ class Personal:
         return self._Estado
 
     # Setters con validación
-    def set_ID_Personal(self, ID_Personal):
-        self._ID_Personal = ID_Personal
+    def set_ID(self, ID):
+        self._ID = ID
 
     def set_Nombre(self, Nombre):
         self._Nombre = Nombre
@@ -41,7 +41,7 @@ class Personal:
     # Método para convertir a diccionario
     def to_dict(self):
         return {
-            'ID_Personal': self._ID_Personal,
+            'ID': self._ID,
             'Nombre': self._Nombre,
             'Rol': self._Rol,
             'Horario': self._Horario,

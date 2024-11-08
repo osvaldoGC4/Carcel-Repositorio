@@ -1,52 +1,22 @@
-import json
-import pyodbc
-from models.visitante import Visitante
-from common.crud import Crud
-from common.conexion import Conexion
-from common.utiles import Utiles
+from flask import Blueprint, request
+from controller.baseController import BaseController
 
-class VisitanteController:
-    operacionCrud = None
+class VisitanteController(BaseController):
+    def __init__(self, app):
+        super().__init__('visitante')
+        visitante_blueprint = Blueprint('visitante', __name__)
+        visitante_blueprint.add_url_rule('/', view_func=self.getAll, methods=["GET"])
+        visitante_blueprint.add_url_rule('/<int:id>', view_func=self.getById, methods=["GET"])
+        visitante_blueprint.add_url_rule('/', view_func=self.create, methods=["POST"])
+        visitante_blueprint.add_url_rule('/<int:id>', view_func=self.update_route, methods=["PATCH"])
+        visitante_blueprint.add_url_rule('/<int:id>', view_func=self.delete_route, methods=["DELETE"])
+        app.register_blueprint(visitante_blueprint, url_prefix='/visitante')
 
-    def __init__(self):
-        self.operacionCrud = Crud()
-        self.show = Utiles()
+    def update_route(self, id):
+        extra_params = request.args.to_dict()
+        return self.update(id, extra_params)
 
-    def crear_visitante(self, nuevo_visitante: Visitante):
-        visitante_dict = nuevo_visitante.to_dict()
-        visitante_json = json.dumps(visitante_dict)
-        if self.operacionCrud.execInsert("visitante", visitante_json):
-            print(f"Visitante {nuevo_visitante.get_ID_Visitante()} creado con éxito.")
-        else:
-            print(f"Problemas al insertar Visitante {nuevo_visitante.get_Nombre()}.")
-
-    def obtener_visitantes(self):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            print("Ejecutando la consulta para obtener visitantes...")
-            respuesta = self.operacionCrud.execSelect('visitante', '*', '')
-            self.show.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def obtener_visitante(self, ID_Visitante):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            respuesta = self.operacionCrud.execSelect('visitante', '*', '{"where": "ID_Visitante = ' + str(ID_Visitante) + '"}')
-            self.show.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def actualizar_visitante(self, editar_visitante: Visitante):
-        visitante_dict = editar_visitante.to_dict()
-        visitante_json = json.dumps(visitante_dict)
-        self.operacionCrud.execUpdate('visitante', visitante_json, '{"where": "ID_Visitante = ' + str(editar_visitante.get_ID_Visitante()) + '"}')
-
-    def eliminar_visitante(self, ID_Visitante):
-        self.operacionCrud.execDelete('visitante', f'ID_Visitante = {ID_Visitante}')
+    def delete_route(self, id):
+        extra_params = request.args.to_dict()
+        print(extra_params)
+        return self.delete(id, extra_params)

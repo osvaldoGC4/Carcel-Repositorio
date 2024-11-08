@@ -1,6 +1,6 @@
 class Transferencia:
-    def __init__(self, ID_Transferencia=None, ID_Interno=None, ID_Celda_Origen=None, ID_Celda_Destino=None, Fecha=None, Motivo=None):
-        self._ID_Transferencia = ID_Transferencia
+    def __init__(self, ID=None, ID_Interno=None, ID_Celda_Origen=None, ID_Celda_Destino=None, Fecha=None, Motivo=None):
+        self._ID = ID
         self._ID_Interno = ID_Interno
         self._ID_Celda_Origen = ID_Celda_Origen
         self._ID_Celda_Destino = ID_Celda_Destino
@@ -8,8 +8,8 @@ class Transferencia:
         self._Motivo = Motivo
 
     # Getters
-    def get_ID_Transferencia(self):
-        return self._ID_Transferencia
+    def get_ID(self):
+        return self._ID
 
     def get_ID_Interno(self):
         return self._ID_Interno
@@ -27,8 +27,8 @@ class Transferencia:
         return self._Motivo
 
     # Setters con validación
-    def set_ID_Transferencia(self, ID_Transferencia):
-        self._ID_Transferencia = ID_Transferencia
+    def set_ID(self, ID):
+        self._ID = ID
 
     def set_ID_Interno(self, ID_Interno):
         self._ID_Interno = ID_Interno
@@ -48,7 +48,7 @@ class Transferencia:
     # Método para convertir a diccionario
     def to_dict(self):
         return {
-            'ID_Transferencia': self._ID_Transferencia,
+            'ID': self._ID,
             'ID_Interno': self._ID_Interno,
             'ID_Celda_Origen': self._ID_Celda_Origen,
             'ID_Celda_Destino': self._ID_Celda_Destino,

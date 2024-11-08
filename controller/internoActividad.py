@@ -8,9 +8,13 @@ from common.utiles import Utiles
 class InternoActividadController:
     operacionCrud = None
 
-    def __init__(self):
+    def __init__(self, app):
         self.operacionCrud = Crud()
-        self.show = Utiles()
+        app.add_url_rule('/visitantes', view_func=self.getAll, methods=["GET"])
+        app.add_url_rule('/visitante/<int:id>', view_func=self.getById, methods=["GET"])
+        app.add_url_rule('/visitante', view_func=self.create, methods=["POST"])
+        app.add_url_rule('/visitante', view_func=self.update, methods=["PATCH"])
+        app.add_url_rule('/visitante/<int:id>', view_func=self.delete, methods=["DELETE"])
 
     def crear_interno_actividad(self, nuevo_interno_actividad: InternoActividad):
         interno_actividad_dict = nuevo_interno_actividad.to_dict()
@@ -26,7 +30,7 @@ class InternoActividadController:
         try:
             print("Ejecutando la consulta para obtener relaciones Interno-Actividad...")
             respuesta = self.operacionCrud.execSelect('interno_actividad', '*', '')
-            self.show.mostrar_resultados_dinamico(respuesta)
+            Utiles.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -38,7 +42,7 @@ class InternoActividadController:
         try:
             where_clause = f'ID_Interno = {ID_Interno} AND ID_Actividad = {ID_Actividad}'
             respuesta = self.operacionCrud.execSelect('interno_actividad', '*', f'{{"where": "{where_clause}"}}')
-            self.show.mostrar_resultados_dinamico(respuesta)
+            Utiles.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:

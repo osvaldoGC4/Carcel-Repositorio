@@ -1,6 +1,6 @@
 class Condena:
-    def __init__(self, ID_Condena=None, ID_Interno=None, ID_Delito=None, Fecha_Inicio=None, Duracion=None, Tipo=None, ID_Personal=None):
-        self._ID_Condena = ID_Condena
+    def __init__(self, ID=None, ID_Interno=None, ID_Delito=None, Fecha_Inicio=None, Duracion=None, Tipo=None, ID_Personal=None):
+        self._ID = ID
         self._ID_Interno = ID_Interno
         self._ID_Delito = ID_Delito
         self._Fecha_Inicio = Fecha_Inicio
@@ -9,8 +9,8 @@ class Condena:
         self._ID_Personal = ID_Personal
 
     # Getters
-    def get_ID_Condena(self):
-        return self._ID_Condena
+    def get_ID(self):
+        return self._ID
 
     def get_ID_Interno(self):
         return self._ID_Interno
@@ -31,8 +31,8 @@ class Condena:
         return self._ID_Personal
 
     # Setters con validación
-    def set_ID_Condena(self, ID_Condena):
-        self._ID_Condena = ID_Condena
+    def set_ID(self, ID):
+        self._ID = ID
 
     def set_ID_Interno(self, ID_Interno):
         self._ID_Interno = ID_Interno
@@ -55,7 +55,7 @@ class Condena:
     # Método para convertir a diccionario
     def to_dict(self):
         return {
-            'ID_Condena': self._ID_Condena,
+            'ID': self._ID,
             'ID_Interno': self._ID_Interno,
             'ID_Delito': self._ID_Delito,
             'Fecha_Inicio': self._Fecha_Inicio,

@@ -1,6 +1,6 @@
 class Visita:
-    def __init__(self, ID_Visita=None, ID_Interno=None, ID_Visitante=None, Fecha=None, Hora_Inicio=None, Duracion=None):
-        self._ID_Visita = ID_Visita
+    def __init__(self, ID=None, ID_Interno=None, ID_Visitante=None, Fecha=None, Hora_Inicio=None, Duracion=None):
+        self._ID = ID
         self._ID_Interno = ID_Interno
         self._ID_Visitante = ID_Visitante
         self._Fecha = Fecha
@@ -9,7 +9,7 @@ class Visita:
 
     # Getters
     def get_ID_Visita(self):
-        return self._ID_Visita
+        return self._ID
 
     def get_ID_Interno(self):
         return self._ID_Interno
@@ -27,8 +27,8 @@ class Visita:
         return self._Duracion
 
     # Setters con validación
-    def set_ID_Visita(self, ID_Visita):
-        self._ID_Visita = ID_Visita
+    def set_ID_Visita(self, ID):
+        self._ID = ID
 
     def set_ID_Interno(self, ID_Interno):
         self._ID_Interno = ID_Interno
@@ -48,7 +48,7 @@ class Visita:
     # Método para convertir a diccionario
     def to_dict(self):
         return {
-            'ID_Visita': self._ID_Visita,
+            'ID': self._ID,
             'ID_Interno': self._ID_Interno,
             'ID_Visitante': self._ID_Visitante,
             'Fecha': self._Fecha,

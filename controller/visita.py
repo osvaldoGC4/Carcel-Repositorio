@@ -1,53 +1,22 @@
-import json
-import pyodbc
-from models.visita import Visita
-from common.crud import Crud
-from common.conexion import Conexion
-from common.utiles import Utiles
+from flask import Blueprint, request
+from controller.baseController import BaseController
 
-class VisitaController:
-    operacionCrud = None
+class VisitaController(BaseController):
+    def __init__(self, app):
+        super().__init__('visita')
+        visita_blueprint = Blueprint('visita', __name__)
+        visita_blueprint.add_url_rule('/', view_func=self.getAll, methods=["GET"])
+        visita_blueprint.add_url_rule('/<int:id>', view_func=self.getById, methods=["GET"])
+        visita_blueprint.add_url_rule('/', view_func=self.create, methods=["POST"])
+        visita_blueprint.add_url_rule('/<int:id>', view_func=self.update_route, methods=["PATCH"])
+        visita_blueprint.add_url_rule('/<int:id>', view_func=self.delete_route, methods=["DELETE"])
+        app.register_blueprint(visita_blueprint, url_prefix='/visita')
 
-    def __init__(self):
-        self.operacionCrud = Crud()
-        self.show = Utiles()
+    # Rutas de actualización y eliminación que admiten parámetros adicionales
+    def update_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.update(id, extra_params)
 
-    def crear_visita(self, nueva_visita: Visita):
-        visita_dict = nueva_visita.to_dict()
-        visita_json = json.dumps(visita_dict)
-        if self.operacionCrud.execInsert("visita", visita_json):
-            print(f"Visita {nueva_visita.get_ID_Visita()} creada con éxito.")
-        else:
-            print(f"Problemas al insertar Visita para el Interno {nueva_visita.get_ID_Interno()}.")
-
-    def obtener_visitas(self):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            print("Ejecutando la consulta para obtener visitas...")
-            respuesta = self.operacionCrud.execSelect('visita', '*', '')
-            self.show.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def obtener_visita(self, ID_Visita):
-        conexion = Conexion()
-        conexion.conectar()
-        try:
-            respuesta = self.operacionCrud.execSelect('visita', '*', '{"where": "ID_Visita = ' + str(ID_Visita) + '"}')
-            self.show.mostrar_resultados_dinamico(respuesta)
-        except pyodbc.Error as e:
-            print(f"Error en la ejecución de la consulta: {e}")
-        finally:
-            conexion.cerrar()
-
-    def actualizar_visita(self, editar_visita: Visita):
-        visita_dict = editar_visita.to_dict()
-        visita_json = json.dumps(visita_dict)
-        self.operacionCrud.execUpdate('visita', visita_json, '{"where": "ID_Visita = ' + str(editar_visita.get_ID_Visita()) + '"}')
-
-    def eliminar_visita(self, ID_Visita):
-        self.operacionCrud.execDelete('visita', f'ID_Visita = {ID_Visita}')
-
+    def delete_route(self, id):
+        extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
+        return self.delete(id, extra_params)

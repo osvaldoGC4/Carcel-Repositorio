@@ -1,13 +1,13 @@
 class Visitante:
-    def __init__(self, ID_Visitante=None, Nombre=None, Relacion=None, Documento=None):
-        self._ID_Visitante = ID_Visitante
+    def __init__(self, ID=None, Nombre=None, Relacion=None, Documento=None):
+        self._ID = ID
         self._Nombre = Nombre
         self._Relacion = Relacion
         self._Documento = Documento
 
     # Getters
-    def get_ID_Visitante(self):
-        return self._ID_Visitante
+    def get_ID(self):
+        return self._ID
 
     def get_Nombre(self):
         return self._Nombre
@@ -19,8 +19,8 @@ class Visitante:
         return self._Documento
 
     # Setters con validación
-    def set_ID_Visitante(self, ID_Visitante):
-        self._ID_Visitante = ID_Visitante
+    def set_ID(self, ID):
+        self._ID = ID
 
     def set_Nombre(self, Nombre):
         self._Nombre = Nombre
@@ -34,7 +34,7 @@ class Visitante:
     # Método para convertir a diccionario
     def to_dict(self):
         return {
-            'ID_Visitante': self._ID_Visitante,
+            'ID': self._ID,
             'Nombre': self._Nombre,
             'Relacion': self._Relacion,
             'Documento': self._Documento

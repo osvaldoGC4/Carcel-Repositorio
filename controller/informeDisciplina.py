@@ -8,9 +8,13 @@ from common.utiles import Utiles
 class InformeDisciplinaController:
     operacionCrud = None
 
-    def __init__(self):
+    def __init__(self, app):
         self.operacionCrud = Crud()
-        self.show = Utiles()
+        app.add_url_rule('/visitantes', view_func=self.getAll, methods=["GET"])
+        app.add_url_rule('/visitante/<int:id>', view_func=self.getById, methods=["GET"])
+        app.add_url_rule('/visitante', view_func=self.create, methods=["POST"])
+        app.add_url_rule('/visitante', view_func=self.update, methods=["PATCH"])
+        app.add_url_rule('/visitante/<int:id>', view_func=self.delete, methods=["DELETE"])
 
     def crear_informe(self, nuevo_informe: InformeDisciplina):
         informe_dict = nuevo_informe.to_dict()
@@ -26,7 +30,7 @@ class InformeDisciplinaController:
         try:
             print("Ejecutando la consulta para obtener informes disciplinarios...")
             respuesta = self.operacionCrud.execSelect('informe_disciplina', '*', '')
-            self.show.mostrar_resultados_dinamico(respuesta)
+            Utiles.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:
@@ -37,7 +41,7 @@ class InformeDisciplinaController:
         conexion.conectar()
         try:
             respuesta = self.operacionCrud.execSelect('informe_disciplina', '*', '{"where": "ID_Informe = ' + str(ID_Informe) + '"}')
-            self.show.mostrar_resultados_dinamico(respuesta)
+            Utiles.mostrar_resultados_dinamico(respuesta)
         except pyodbc.Error as e:
             print(f"Error en la ejecución de la consulta: {e}")
         finally:

@@ -1,6 +1,6 @@
 class Interno:
-    def __init__(self, ID_Interno=None, Nombre=None, Fecha_Ingreso=None, Estado=None, ID_Celda=None, Fecha_Liberacion=None):
-        self._ID_Interno = ID_Interno
+    def __init__(self, ID=None, Nombre=None, Fecha_Ingreso=None, Estado=None, ID_Celda=None, Fecha_Liberacion=None):
+        self._ID = ID
         self._Nombre = Nombre
         self._Fecha_Ingreso = Fecha_Ingreso
         self._Estado = Estado
@@ -8,8 +8,8 @@ class Interno:
         self._Fecha_Liberacion = Fecha_Liberacion
 
     # Getters
-    def get_ID_Interno(self):
-        return self._ID_Interno
+    def get_ID(self):
+        return self._ID
 
     def get_Nombre(self):
         return self._Nombre
@@ -27,9 +27,9 @@ class Interno:
         return self._Fecha_Liberacion
 
     # Setters con validación
-    def set_ID_Interno(self, ID_Interno):
-        if isinstance(ID_Interno, int) and ID_Interno > 0:
-            self._ID_Interno = ID_Interno
+    def set_ID(self, ID):
+        if isinstance(ID, int) and ID > 0:
+            self._ID = ID
         else:
             raise ValueError("El ID del interno debe ser un entero positivo.")
 
@@ -51,7 +51,7 @@ class Interno:
     # Método para convertir a diccionario
     def to_dict(self):
         return {
-            'ID_Interno': self._ID_Interno,
+            'ID': self._ID,
             'Nombre': self._Nombre,
             'Fecha_Ingreso': self._Fecha_Ingreso,
             'Estado': self._Estado,
