@@ -1,9 +1,8 @@
 from Crypto.Cipher import AES
 import base64
-import os
 
 class EncriptadorAES:
-    def __init__(self, clave):
+    def __init__(self, clave: str):
         self.clave = clave.encode('utf-8')  # Clave de encriptación (debe ser de 16, 24 o 32 bytes)
         self.bs = AES.block_size  # Tamaño del bloque AES (por defecto 16)
 
@@ -23,6 +22,3 @@ class EncriptadorAES:
         # Eliminar el padding
         padding = ord(decrypted[-1])
         return decrypted[:-padding]
-
-# Instancia de la clase de encriptación con una clave de 16 caracteres
-encriptador = EncriptadorAES("admin1234")
