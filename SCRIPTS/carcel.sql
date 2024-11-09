@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-11-2024 a las 21:56:11
--- Versión del servidor: 10.4.19-MariaDB
--- Versión de PHP: 8.0.7
+-- Tiempo de generación: 09-11-2024 a las 02:05:19
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -22,8 +22,10 @@ SET time_zone = "+00:00";
 --
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ContarReclusosPorCelda`()
-BEGIN
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ContarReclusosPorCelda` ()   BEGIN
     SELECT 
         c.Ubicacion,
         COUNT(i.ID_Interno) AS Total_Reclusos
@@ -34,11 +36,8 @@ BEGIN
     GROUP BY 
         c.ID_Celda;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCondenaPorInternoYDelito`(IN `p_ID_Interno` INT, IN `p_ID_Delito` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerCondenaPorInternoYDelito` (IN `p_ID_Interno` INT, IN `p_ID_Delito` INT)   BEGIN
     SELECT 
         c.ID_Condena,
         c.Fecha_Inicio,
@@ -55,204 +54,92 @@ BEGIN
     WHERE 
         c.ID_Interno = p_ID_Interno AND c.ID_Delito = p_ID_Delito;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteActividad`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteActividad` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM actividad WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteCelda`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteCelda` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM celda WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteCondena`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteCondena` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM condena WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteDelito`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteDelito` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM delito WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteInformeDisciplina`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteInformeDisciplina` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM informedisciplina WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteInterno`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteInterno` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM interno WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteInternoActividad`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteInternoActividad` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM internoactividad WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeletePersonal`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeletePersonal` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM personal WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteTransferencia`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteTransferencia` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM transferencia WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteVisita`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteVisita` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM visita WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteVisitaMultiple`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteVisitaMultiple` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM visitamultiple WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteVisitante`(IN `p_condition` VARCHAR(255))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_DeleteVisitante` (IN `p_condition` VARCHAR(255))   BEGIN
     SET @query = CONCAT('DELETE FROM visitante WHERE ', p_condition);
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertCelda`(IN p_celda_json JSON)
-BEGIN
-    DECLARE v_sql_insert VARCHAR(10000);
-    DECLARE v_columns VARCHAR(10000);
-    DECLARE v_values VARCHAR(10000);
-    DECLARE v_column_name VARCHAR(255);
-    DECLARE v_column_value JSON;
-    DECLARE done INT DEFAULT FALSE;
-    DECLARE cur CURSOR FOR 
-        SELECT COLUMN_NAME
-        FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_NAME = 'celda';  -- Especificamos la tabla 'celda'
- 
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
- 
-    -- Inicializar las variables de columnas y valores
-    SET v_columns = '';
-    SET v_values = '';
- 
-    OPEN cur;
- 
-    -- Recorrer las columnas de la tabla 'celda' y construir la sentencia SQL
-    read_loop: LOOP
-        FETCH cur INTO v_column_name;
- 
-        IF done THEN
-            LEAVE read_loop;
-        END IF;
- 
-        -- Obtener el valor del campo correspondiente desde el JSON
-        SET v_column_value = JSON_UNQUOTE(JSON_EXTRACT(p_celda_json, CONCAT('$."', v_column_name, '"')));
- 
-        -- Verificar si el valor existe en el JSON
-        IF v_column_value IS NOT NULL THEN
-            -- Si el valor existe, agregarlo a la lista de valores
-            IF v_values != '' THEN
-                SET v_values = CONCAT(v_values, ', "', v_column_value, '"');
-            ELSE
-                SET v_values = CONCAT('"', v_column_value, '"');
-            END IF;
- 
-            -- Agregar la columna a la lista de columnas
-            IF v_columns != '' THEN
-                SET v_columns = CONCAT(v_columns, ', ', v_column_name);
-            ELSE
-                SET v_columns = v_column_name;
-            END IF;
-        END IF;
- 
-    END LOOP;
- 
-    CLOSE cur;
- 
-    -- Construir la consulta de inserción
-    SET v_sql_insert = CONCAT('INSERT INTO celda (', v_columns, ') VALUES (', v_values, ')');
- 
-    -- Ejecutar la consulta dinámica de inserción
-    PREPARE stmt FROM v_sql_insert;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
- 
-    -- COMMIT para asegurar que la transacción se aplique
-    COMMIT;
- 
-    -- Obtener el ID de la última celda insertada y devolver la fila
-    SET v_sql_insert = 'SELECT * FROM celda WHERE ID = LAST_INSERT_ID()';
-    PREPARE stmt FROM v_sql_insert;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertactividad`(IN p_actividad_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertactividad` (IN `p_actividad_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -321,11 +208,78 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertcondena`(IN p_condena_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertCelda` (IN `p_celda_json` JSON)   BEGIN
+    DECLARE v_sql_insert VARCHAR(10000);
+    DECLARE v_columns VARCHAR(10000);
+    DECLARE v_values VARCHAR(10000);
+    DECLARE v_column_name VARCHAR(255);
+    DECLARE v_column_value JSON;
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE cur CURSOR FOR 
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_NAME = 'celda';  -- Especificamos la tabla 'celda'
+ 
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+ 
+    -- Inicializar las variables de columnas y valores
+    SET v_columns = '';
+    SET v_values = '';
+ 
+    OPEN cur;
+ 
+    -- Recorrer las columnas de la tabla 'celda' y construir la sentencia SQL
+    read_loop: LOOP
+        FETCH cur INTO v_column_name;
+ 
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+ 
+        -- Obtener el valor del campo correspondiente desde el JSON
+        SET v_column_value = JSON_UNQUOTE(JSON_EXTRACT(p_celda_json, CONCAT('$."', v_column_name, '"')));
+ 
+        -- Verificar si el valor existe en el JSON
+        IF v_column_value IS NOT NULL THEN
+            -- Si el valor existe, agregarlo a la lista de valores
+            IF v_values != '' THEN
+                SET v_values = CONCAT(v_values, ', "', v_column_value, '"');
+            ELSE
+                SET v_values = CONCAT('"', v_column_value, '"');
+            END IF;
+ 
+            -- Agregar la columna a la lista de columnas
+            IF v_columns != '' THEN
+                SET v_columns = CONCAT(v_columns, ', ', v_column_name);
+            ELSE
+                SET v_columns = v_column_name;
+            END IF;
+        END IF;
+ 
+    END LOOP;
+ 
+    CLOSE cur;
+ 
+    -- Construir la consulta de inserción
+    SET v_sql_insert = CONCAT('INSERT INTO celda (', v_columns, ') VALUES (', v_values, ')');
+ 
+    -- Ejecutar la consulta dinámica de inserción
+    PREPARE stmt FROM v_sql_insert;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+ 
+    -- COMMIT para asegurar que la transacción se aplique
+    COMMIT;
+ 
+    -- Obtener el ID de la última celda insertada y devolver la fila
+    SET v_sql_insert = 'SELECT * FROM celda WHERE ID = LAST_INSERT_ID()';
+    PREPARE stmt FROM v_sql_insert;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertcondena` (IN `p_condena_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -394,11 +348,8 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertdelito`(IN p_delito_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertdelito` (IN `p_delito_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -467,11 +418,8 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertinformeDisciplina`(IN p_informeDisciplina_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertinformeDisciplina` (IN `p_informeDisciplina_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -540,11 +488,8 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertinterno`(IN p_interno_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertinterno` (IN `p_interno_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -613,11 +558,8 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertinternoActividad`(IN p_internoActividad_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertinternoActividad` (IN `p_internoActividad_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -686,11 +628,8 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertpersonal`(IN p_personal_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertpersonal` (IN `p_personal_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -759,11 +698,8 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Inserttransferencia`(IN p_transferencia_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Inserttransferencia` (IN `p_transferencia_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -832,11 +768,8 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertvisita`(IN p_visita_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertvisita` (IN `p_visita_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -905,11 +838,8 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertvisitaMultiple`(IN p_visitaMultiple_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertvisitaMultiple` (IN `p_visitaMultiple_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -978,11 +908,8 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertvisitante`(IN p_visitante_json JSON)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Insertvisitante` (IN `p_visitante_json` JSON)   BEGIN
     DECLARE v_sql_insert VARCHAR(10000);
     DECLARE v_columns VARCHAR(10000);
     DECLARE v_values VARCHAR(10000);
@@ -1051,22 +978,16 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectActividad`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectActividad` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM actividad;
     ELSE
         SELECT * FROM actividad WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectCelda`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectCelda` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         -- Si no se pasa un ID o se pasa un valor que represente "todos"
         SELECT * FROM celda;
@@ -1075,121 +996,88 @@ BEGIN
         SELECT * FROM celda WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectCondena`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectCondena` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM condena;
     ELSE
         SELECT * FROM condena WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectDelito`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectDelito` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM delito;
     ELSE
         SELECT * FROM delito WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectInformeDisciplina`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectInformeDisciplina` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM informedisciplina;
     ELSE
         SELECT * FROM informedisciplina WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectInterno`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectInterno` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM interno;
     ELSE
         SELECT * FROM interno WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectInternoActividad`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectInternoActividad` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM internoactividad;
     ELSE
         SELECT * FROM internoactividad WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectPersonal`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectPersonal` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM personal;
     ELSE
         SELECT * FROM personal WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectTransferencia`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectTransferencia` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM transferencia;
     ELSE
         SELECT * FROM transferencia WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectVisita`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectVisita` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM visita;
     ELSE
         SELECT * FROM visita WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectVisitaMultiple`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectVisitaMultiple` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM visitamultiple;
     ELSE
         SELECT * FROM visitamultiple WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectVisitante`(IN `p_id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SelectVisitante` (IN `p_id` INT)   BEGIN
     IF p_id IS NULL OR p_id = 0 THEN
         SELECT * FROM visitante;
     ELSE
         SELECT * FROM visitante WHERE ID = p_id;
     END IF;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateActividad`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateActividad` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -1223,394 +1111,8 @@ BEGIN
     
     DEALLOCATE PREPARE stmt_update;
 END$$
-DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateCondena`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'condena' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE condena SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM condena WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-    
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateDelito`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'delito' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE delito SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM delito WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateInformeDisciplina`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'informedisciplina' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE informedisciplina SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM informedisciplina WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateInterno`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'interno' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE interno SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM interno WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateInternoActividad`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'internoactividad' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE internoactividad SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM internoactividad WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdatePersonal`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'personal' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE personal SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM personal WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateTransferencia`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'transferencia' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE transferencia SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM transferencia WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateVisita`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'visita' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE visita SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM visita WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateVisitaMultiple`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'visitamultiple' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE visitamultiple SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM visitamultiple WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateVisitante`(IN `p_UpdateJSON` JSON, IN `p_Id` INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
-    END;
-
-    START TRANSACTION;
-
-    SET @set_clause = (
-        SELECT GROUP_CONCAT(
-            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
-        )
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = 'visitante' AND COLUMN_NAME != 'ID'
-    );
-
-    SET @update_sql = CONCAT('UPDATE visitante SET ', @set_clause, ' WHERE ID = ', p_Id);
-    PREPARE stmt_update FROM @update_sql;
-    EXECUTE stmt_update;
-
-    IF ROW_COUNT() = 0 THEN
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
-    ELSE
-        COMMIT;
-        SET @result_sql = CONCAT('SELECT * FROM visitante WHERE ID = ', p_Id);
-        PREPARE stmt_result FROM @result_sql;
-        EXECUTE stmt_result;
-        DEALLOCATE PREPARE stmt_result;
-    END IF;
-
-    DEALLOCATE PREPARE stmt_update;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Updatecelda`(
-    IN `p_UpdateJSON` JSON, 
-    IN `p_Id` INT
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Updatecelda` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         -- Manejo de errores SQL
@@ -1665,8 +1167,358 @@ BEGIN
 
     DEALLOCATE PREPARE stmt_update;
 END$$
-DELIMITER ;
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateCondena` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'condena' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE condena SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM condena WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+    
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateDelito` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'delito' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE delito SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM delito WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateInformeDisciplina` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'informedisciplina' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE informedisciplina SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM informedisciplina WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateInterno` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'interno' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE interno SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM interno WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateInternoActividad` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'internoactividad' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE internoactividad SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM internoactividad WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdatePersonal` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'personal' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE personal SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM personal WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateTransferencia` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'transferencia' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE transferencia SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM transferencia WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateVisita` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'visita' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE visita SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM visita WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateVisitaMultiple` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'visitamultiple' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE visitamultiple SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM visitamultiple WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateVisitante` (IN `p_UpdateJSON` JSON, IN `p_Id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error al ejecutar la actualización.';
+    END;
+
+    START TRANSACTION;
+
+    SET @set_clause = (
+        SELECT GROUP_CONCAT(
+            CONCAT(COLUMN_NAME, ' = ', QUOTE(JSON_UNQUOTE(JSON_EXTRACT(p_UpdateJSON, CONCAT('$.', COLUMN_NAME))))) SEPARATOR ', '
+        )
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'visitante' AND COLUMN_NAME != 'ID'
+    );
+
+    SET @update_sql = CONCAT('UPDATE visitante SET ', @set_clause, ' WHERE ID = ', p_Id);
+    PREPARE stmt_update FROM @update_sql;
+    EXECUTE stmt_update;
+
+    IF ROW_COUNT() = 0 THEN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No se realizó ninguna actualización.';
+    ELSE
+        COMMIT;
+        SET @result_sql = CONCAT('SELECT * FROM visitante WHERE ID = ', p_Id);
+        PREPARE stmt_result FROM @result_sql;
+        EXECUTE stmt_result;
+        DEALLOCATE PREPARE stmt_result;
+    END IF;
+
+    DEALLOCATE PREPARE stmt_update;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1679,23 +1531,7 @@ CREATE TABLE `actividad` (
   `Nombre` varchar(255) DEFAULT NULL,
   `Tipo` varchar(255) DEFAULT NULL COMMENT 'Educativa, Recreativa, Laboral',
   `Horario` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `actividad`
---
-
-INSERT INTO `actividad` (`ID`, `Nombre`, `Tipo`, `Horario`) VALUES
-(1, 'Actividad Cultural', 'Deporte', '09:00-10:00'),
-(2, 'Clases de Matemáticas', 'Educativa', '11:00-13:00'),
-(3, 'Cuidado del Huerto', 'Laboral', '14:00-16:00'),
-(4, 'Yoga', 'Recreativa', '16:00-17:00'),
-(5, 'Terapia Ocupacional', 'Educativa', '10:00-12:00'),
-(6, 'Deportes', 'Recreativa', '15:00-17:00'),
-(7, 'Clases de Música', 'Educativa', '09:00-11:00'),
-(8, 'Cocina', 'Laboral', '12:00-14:00'),
-(9, 'Entrenamiento Físico', 'Recreativa', '08:00-09:00'),
-(10, 'Taller de Escritura', 'Educativa', '13:00-15:00');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1708,24 +1544,7 @@ CREATE TABLE `celda` (
   `Ubicacion` varchar(255) DEFAULT NULL,
   `Capacidad` int(11) DEFAULT NULL,
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Ocupada, Disponible'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `celda`
---
-
-INSERT INTO `celda` (`ID`, `Ubicacion`, `Capacidad`, `Estado`) VALUES
-(1, 'Medellin', 8, 'Disponible'),
-(2, 'Medellin2', 5, 'Disponible'),
-(3, 'Bello', 10, 'Disponible'),
-(4, 'Aranjuez', 100, 'Disponible'),
-(5, 'Zona Centro', 60, 'Disponible'),
-(6, 'Zona Alta', 70, 'Ocupada'),
-(7, 'Zona Baja', 80, 'Disponible'),
-(8, 'Zona Interior', 55, 'Ocupada'),
-(9, 'Zona de Aislamiento', 15, 'Disponible'),
-(10, 'Zona Familiar', 20, 'Ocupada'),
-(11, 'Choco', 24, 'Disponible');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1741,23 +1560,7 @@ CREATE TABLE `condena` (
   `Duracion` int(11) DEFAULT NULL COMMENT 'En meses',
   `Tipo` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Permanente, Temporal',
   `ID_Personal` int(11) DEFAULT NULL COMMENT 'Responsable de la condena'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `condena`
---
-
-INSERT INTO `condena` (`ID`, `ID_Interno`, `ID_Delito`, `Fecha_Inicio`, `Duracion`, `Tipo`, `ID_Personal`) VALUES
-(1, 1, 1, '2023-01-01', 12, 'Permanente', 1),
-(2, 2, 2, '2022-06-15', 6, 'Temporal', 2),
-(3, 3, 3, '2023-03-20', 24, 'Permanente', 3),
-(4, 4, 1, '2024-01-10', 18, 'Temporal', 1),
-(5, 5, 2, '2022-11-05', 30, 'Permanente', 2),
-(6, 6, 3, '2023-05-25', 36, 'Temporal', 3),
-(7, 7, 1, '2024-04-15', 24, 'Permanente', 1),
-(8, 8, 2, '2022-08-30', 12, 'Temporal', 2),
-(9, 9, 3, '2023-12-12', 48, 'Permanente', 3),
-(10, 10, 1, '2024-02-20', 6, 'Temporal', 1);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1769,23 +1572,7 @@ CREATE TABLE `delito` (
   `ID` int(11) NOT NULL,
   `Tipo` varchar(255) DEFAULT NULL,
   `Descripcion` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `delito`
---
-
-INSERT INTO `delito` (`ID`, `Tipo`, `Descripcion`) VALUES
-(1, 'Mano armada', 'Puñalada en un ojo'),
-(2, 'asesinato', 'fleteo'),
-(3, 'corrupcion', 'abogado'),
-(4, 'Tráfico de drogas', 'Tráfico de sustancias controladas'),
-(5, 'Secuestro', 'Secuestro de personas'),
-(6, 'Extorsión', 'Extorsión económica'),
-(7, 'Destrucción de propiedad', 'Destrucción intencional de bienes'),
-(8, 'Cibercrimen', 'Delitos informáticos'),
-(9, 'Homicidio culposo', 'Causar la muerte sin intención'),
-(10, 'Lesiones', 'Causar daño físico a una persona');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1799,23 +1586,7 @@ CREATE TABLE `informedisciplina` (
   `Fecha` date DEFAULT NULL,
   `Descripcion` text DEFAULT NULL,
   `Sancion` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `informedisciplina`
---
-
-INSERT INTO `informedisciplina` (`ID`, `ID_Interno`, `Fecha`, `Descripcion`, `Sancion`) VALUES
-(1, 1, '2024-01-15', 'Riña con otro interno', 'Reprimenda'),
-(2, 2, '2024-01-16', 'Fuga tentativa', 'Aislamiento'),
-(3, 3, '2024-01-17', 'Uso de drogas', 'Suspensión de actividades'),
-(4, 4, '2024-01-18', 'Desobediencia', 'Trabajo forzado'),
-(5, 5, '2024-01-19', 'Amenaza a personal', 'Aislamiento'),
-(6, 6, '2024-01-20', 'Destrucción de bienes', 'Reparación de daños'),
-(7, 7, '2024-01-21', 'Robo de alimentos', 'Aumento de horas de trabajo'),
-(8, 8, '2024-01-22', 'Consumo de alcohol', 'Reprimenda'),
-(9, 9, '2024-01-23', 'Insubordinación', 'Suspensión de visitas'),
-(10, 10, '2024-01-24', 'Alteración del orden', 'Aislamiento');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1830,23 +1601,7 @@ CREATE TABLE `interno` (
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Activo, Liberado, Transferido',
   `ID_Celda` int(11) DEFAULT NULL,
   `Fecha_Liberacion` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `interno`
---
-
-INSERT INTO `interno` (`ID`, `Nombre`, `Fecha_Ingreso`, `Estado`, `ID_Celda`, `Fecha_Liberacion`) VALUES
-(1, 'Juan Perez', '2023-01-01', 'Liberado', 2, '0000-00-00'),
-(2, 'Luis Gómez', '2021-06-15', 'Activo', 2, NULL),
-(3, 'Carlos Fernández', '2023-03-20', 'Activo', 3, NULL),
-(4, 'José Martínez', '2024-01-10', 'Activo', 4, NULL),
-(5, 'Ana Torres', '2022-11-05', 'Liberado', 5, '2024-01-01'),
-(6, 'María López', '2023-05-25', 'Activo', 6, NULL),
-(7, 'Jorge Santos', '2024-04-15', 'Activo', 7, NULL),
-(8, 'Ricardo Alvarado', '2022-08-30', 'Transferido', 8, NULL),
-(9, 'Sofía Morales', '2023-12-12', 'Activo', 9, NULL),
-(10, 'Isabel Sánchez', '2024-02-20', 'Liberado', 10, '2024-03-01');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1859,23 +1614,7 @@ CREATE TABLE `internoactividad` (
   `ID_Interno` int(11) NOT NULL,
   `ID_Actividad` int(11) NOT NULL,
   `Fecha_Actividad` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `internoactividad`
---
-
-INSERT INTO `internoactividad` (`ID`, `ID_Interno`, `ID_Actividad`, `Fecha_Actividad`) VALUES
-(1, 1, 1, '2024-02-02'),
-(2, 1, 2, '2024-02-02'),
-(3, 2, 1, '2024-02-02'),
-(4, 2, 3, '2024-02-02'),
-(5, 3, 2, '2024-02-02'),
-(6, 3, 4, '2024-02-02'),
-(7, 4, 3, '2024-02-02'),
-(8, 5, 2, '2024-02-02'),
-(9, 6, 5, '2024-02-02'),
-(10, 7, 6, '2024-02-02');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1889,23 +1628,7 @@ CREATE TABLE `personal` (
   `Rol` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Guardia, Administrador',
   `Horario` varchar(255) DEFAULT NULL,
   `Estado` varchar(255) DEFAULT NULL COMMENT 'Activo, Inactivo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `personal`
---
-
-INSERT INTO `personal` (`ID`, `Nombre`, `Rol`, `Horario`, `Estado`) VALUES
-(1, 'Andru00e9s Ruiz', 'Guardia', '08:00-16:00', 'Inactivo'),
-(2, 'Paola Martínez', 'Administradora', '09:00-17:00', 'Activo'),
-(3, 'Fernando Gómez', 'Psicólogo', '10:00-18:00', 'Activo'),
-(4, 'Laura Fernández', 'Educadora', '09:00-17:00', 'Inactivo'),
-(5, 'Carlos Sánchez', 'Guardia', '08:00-16:00', 'Activo'),
-(6, 'Julián Castro', 'Administradora', '09:00-17:00', 'Inactivo'),
-(7, 'Elena Pérez', 'Psicóloga', '10:00-18:00', 'Activo'),
-(8, 'Marisol López', 'Educadora', '09:00-17:00', 'Activo'),
-(9, 'Ricardo Morales', 'Guardia', '08:00-16:00', 'Activo'),
-(10, 'Sofia Torres', 'Administradora', '09:00-17:00', 'Activo');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1920,23 +1643,7 @@ CREATE TABLE `transferencia` (
   `ID_Celda_Destino` int(11) DEFAULT NULL,
   `Fecha` date DEFAULT NULL,
   `Motivo` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `transferencia`
---
-
-INSERT INTO `transferencia` (`ID`, `ID_Interno`, `ID_Celda_Origen`, `ID_Celda_Destino`, `Fecha`, `Motivo`) VALUES
-(1, 1, 1, 2, '2024-01-01', NULL),
-(2, 2, 2, 3, '2024-02-01', NULL),
-(3, 3, 3, 4, '2024-03-01', NULL),
-(4, 4, 4, 5, '2024-04-01', NULL),
-(5, 5, 5, 6, '2024-05-01', NULL),
-(6, 6, 6, 7, '2024-06-01', NULL),
-(7, 7, 7, 8, '2024-07-01', NULL),
-(8, 8, 8, 9, '2024-08-01', NULL),
-(9, 9, 9, 10, '2024-09-01', NULL),
-(10, 10, 10, 1, '2024-10-01', NULL);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1951,14 +1658,7 @@ CREATE TABLE `visita` (
   `Fecha` date DEFAULT NULL,
   `Hora_Inicio` time DEFAULT NULL,
   `Duracion` int(11) DEFAULT NULL COMMENT 'En minutos'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `visita`
---
-
-INSERT INTO `visita` (`ID`, `ID_Interno`, `ID_Visitante`, `Fecha`, `Hora_Inicio`, `Duracion`) VALUES
-(1, 1, 2, '2024-11-08', '10:00:00', 401);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1971,14 +1671,7 @@ CREATE TABLE `visitamultiple` (
   `ID_Visita` int(11) NOT NULL,
   `ID_Visitante` int(11) NOT NULL,
   `Observacion` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `visitamultiple`
---
-
-INSERT INTO `visitamultiple` (`ID`, `ID_Visita`, `ID_Visitante`, `Observacion`) VALUES
-(2, 1, 2, 'Mal comportamiento, agresivo');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1991,14 +1684,7 @@ CREATE TABLE `visitante` (
   `Nombre` varchar(255) DEFAULT NULL,
   `Relacion` varchar(255) DEFAULT NULL COMMENT 'Ejemplo: Familiar, Abogado',
   `Documento` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `visitante`
---
-
-INSERT INTO `visitante` (`ID`, `Nombre`, `Relacion`, `Documento`) VALUES
-(2, 'John Valencia', 'Parcero', '1003222');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Índices para tablas volcadas
@@ -2098,31 +1784,31 @@ ALTER TABLE `visitante`
 -- AUTO_INCREMENT de la tabla `actividad`
 --
 ALTER TABLE `actividad`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `celda`
 --
 ALTER TABLE `celda`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `condena`
 --
 ALTER TABLE `condena`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `delito`
 --
 ALTER TABLE `delito`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `informedisciplina`
 --
 ALTER TABLE `informedisciplina`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `interno`
@@ -2134,13 +1820,13 @@ ALTER TABLE `interno`
 -- AUTO_INCREMENT de la tabla `internoactividad`
 --
 ALTER TABLE `internoactividad`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `personal`
 --
 ALTER TABLE `personal`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `transferencia`
@@ -2152,19 +1838,19 @@ ALTER TABLE `transferencia`
 -- AUTO_INCREMENT de la tabla `visita`
 --
 ALTER TABLE `visita`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `visitamultiple`
 --
 ALTER TABLE `visitamultiple`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `visitante`
 --
 ALTER TABLE `visitante`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
