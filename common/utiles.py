@@ -1,4 +1,4 @@
-import json
+import re
 from datetime import datetime, date, time
 
 class Utiles:
@@ -14,7 +14,10 @@ class Utiles:
         for obj in objects:
             item_dict = Utiles.to_dict(obj)
             if decrypt_fn:
-                item_dict = {k: decrypt_fn(v) if isinstance(v, str) else v for k, v in item_dict.items()}
+                item_dict = {
+                    k: decrypt_fn(v) if isinstance(v, str) and not Utiles.is_date_format(v) else v 
+                    for k, v in item_dict.items()
+                }
             resultado.append(item_dict)
         return resultado
 
@@ -24,7 +27,7 @@ class Utiles:
             return [Utiles.to_dict(item) for item in obj]
         if isinstance(obj, dict):
             return {k: Utiles.to_dict(v) for k, v in obj.items()}
-        if isinstance(obj, (date, datetime)):
+        if isinstance(obj, (datetime, date)):
             return obj.strftime('%Y-%m-%d')
         if isinstance(obj, time):
             return obj.strftime('%H:%M:%S')
@@ -34,3 +37,38 @@ class Utiles:
                 result[key] = Utiles.to_dict(value)
             return result
         return obj
+    
+    @staticmethod
+    def is_date_format(value):
+        """
+        Verifica si una cadena está en un formato válido de fecha o de tiempo.
+        """
+        # Patrones para formatos comunes de fecha y hora
+        date_patterns = [
+            '%Y-%m-%d',           # Formato de fecha (AAAA-MM-DD)
+            '%Y-%m-%d %H:%M:%S',  # Fecha y hora (AAAA-MM-DD HH:MM:SS)
+            '%d/%m/%Y',           # Formato alternativo de fecha (DD/MM/AAAA)
+            '%Y/%m/%d',           # Otra variación (AAAA/MM/DD)
+        ]
+        
+        time_patterns = [
+            r'^\d{2}:\d{2}:\d{2}$',              # HH:MM:SS
+            r'^\d{2}:\d{2}$',                    # HH:MM
+            r'^\d{2}:\d{2} (AM|PM)$',            # HH:MM AM/PM
+            r'^\d{2}:\d{2}:\d{2} (AM|PM)$'       # HH:MM:SS AM/PM
+        ]
+
+        # Verificar cada patrón de fecha usando datetime.strptime
+        for pattern in date_patterns:
+            try:
+                datetime.strptime(value, pattern)
+                return True
+            except ValueError:
+                continue
+
+        # Verificar patrones de hora usando expresiones regulares
+        for pattern in time_patterns:
+            if re.match(pattern, value):
+                return True
+
+        return False
