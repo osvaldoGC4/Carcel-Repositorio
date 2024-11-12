@@ -50,7 +50,11 @@ class BaseController:
             if not entidad_data:
                 raise ValueError("Los datos de la entidad están vacíos.")
 
-            entidad_data = {k: self.encriptador.encriptar(v) if isinstance(v, str) else v for k, v in entidad_data.items()}
+            # No encriptar los valores que son fechas
+            entidad_data = {
+                k: self.encriptador.encriptar(v) if isinstance(v, str) and not Utiles.is_date_format(v) else v
+                for k, v in entidad_data.items()
+            }
             entidad_json = json.dumps(entidad_data)
 
             self.conexion.conectar()
@@ -71,12 +75,18 @@ class BaseController:
             self.conexion.cerrar()
         return jsonify(respuesta)
 
+
     def update(self, id, extra_params=None):
         respuesta = {}
         try:
             self.conexion.conectar()
             entidad_data = request.json
-            entidad_data = {k: self.encriptador.encriptar(v) if isinstance(v, str) else v for k, v in entidad_data.items()}
+
+            # No encriptar los valores que son fechas
+            entidad_data = {
+                k: self.encriptador.encriptar(v) if isinstance(v, str) and not Utiles.is_date_format(v) else v
+                for k, v in entidad_data.items()
+            }
             entidad_json = json.dumps(entidad_data)
 
             dataResponse = self.conexion.execSPResult(f"sp_Update{self.entidad_nombre}", [entidad_json, id])
@@ -93,6 +103,7 @@ class BaseController:
             print(traza)
         finally:
             self.conexion.cerrar()
+
 
     def delete(self, id, extra_params=None):
         respuesta = False

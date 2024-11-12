@@ -180,7 +180,7 @@ if __name__ == "__main__":
     InternoActividadController(app)
     InformeDisciplinaController(app)
     CondenaController(app)
-    # _ReglasNController = ReglasNController(app)
+    ReglasNController(app)
     app.run('localhost', 4040);
 
 # if __name__ == '__main__':
