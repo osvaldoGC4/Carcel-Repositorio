@@ -134,3 +134,44 @@ git push origin nombre-de-tu-rama
 
 
 
+
+
+
+try:
+    key = "KJhisdy878779ghdfgh45645634564356";
+
+    # Generar el codigo de autenticacion
+    encoded = jwt.encode({"Usuario": "Pepito"}, key, algorithm="HS256");
+    print(encoded);
+
+    # Genera un error al no ser una clave correcta
+    # encoded = "Test"; 
+    # encoded = "12345678901sdjgfjshNiIsInR5cCI6IkpXVCJ9.eyJVc3VhcmlvIjoiUGVwaXRvUGVyZXoifQ.wX5VYb2e7HxtBuReObp0SULKzEqs_eDC7aqFc3dxoRE";
+    resultado = jwt.decode(encoded, key, algorithms="HS256");
+    print(resultado["Usuario"]);
+except Exception as ex:
+    print(ex);
+
+
+test = Test.Test();
+print(test.Ejecutar());
+
+"""
+    ** Sin base de proyecto para modificar no hay nota!
+    ** El usuario lo pueden quemar en un archivo .py, no tiene que ir a base datos u otra cosa, para el JWT
+    ** Los servicios deben tener Capa de Repositorio, Aplicacion, Servicio 
+    (Indiviudales, Excepcion Servicio: puede ser uno solo)
+    ** Todos con commit en el GIT, necesitamos 2 repositorios o Ramas
+
+    py -m pip install pycryptodome
+    py -m pip install PyJWT
+
+    * Para las tablas -- Esto es opcional si deciden usar AES_ENCRYPT o el cifrado en 
+    base de datos
+    SELECT AES_ENCRYPT('Test', 'ytuysy76887');
+    SELECT AES_DECRYPT(AES_ENCRYPT('Test', 'ytuysy76887'), 'ytuysy76887');
+
+        `name` blob NOT NULL,
+"""
+
+

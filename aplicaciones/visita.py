@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from controller.baseController import BaseController
+from aplicaciones.baseController import BaseController
 
 class VisitaController(BaseController):
     def __init__(self, app):

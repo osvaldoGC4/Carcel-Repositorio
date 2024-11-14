@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from controller.baseController import BaseController
+from aplicaciones.baseController import BaseController
 
 class PersonalController(BaseController):
     operacionCrud = None

@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, request
-from controller.baseController import BaseController
+from aplicaciones.baseController import BaseController
 from common.encriptador import EncriptadorAES
 
 class CeldaController(BaseController):
