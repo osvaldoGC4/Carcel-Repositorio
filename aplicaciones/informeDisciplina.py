@@ -2,7 +2,6 @@ from flask import Blueprint, request
 from aplicaciones.baseController import BaseController
 
 class InformeDisciplinaController(BaseController):
-    operacionCrud = None
 
     def __init__(self, app):
         super().__init__('informeDisciplina')

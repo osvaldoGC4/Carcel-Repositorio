@@ -1,7 +1,6 @@
 import json
 import traceback  # Importar módulo para manejar trazas detalladas de errores
 from flask import jsonify, request
-from common.crud import Crud
 from common.utiles import Utiles
 from common.conexion import Conexion
 from common.encriptador import EncriptadorAES

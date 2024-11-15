@@ -2,8 +2,7 @@ from flask import Blueprint, request
 from aplicaciones.baseController import BaseController
 
 class ActividadController(BaseController):
-    operacionCrud = None
-
+    
     def __init__(self, app):
         super().__init__('actividad')
         actividad_blueprint = Blueprint('actividad', __name__)

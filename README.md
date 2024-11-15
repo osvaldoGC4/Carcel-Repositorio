@@ -41,7 +41,6 @@ Carcel-Repositorio/
 │   └── entidad.py          # Controladores para manejar las entidades
 ├── Common/
 │   ├── conexion.py         # Gestión de la conexión a la base de datos
-│   └── crud.py             # Métodos comunes de creación, lectura, actualización y eliminación
 ├── Scripts/
 │   └── EsquemaBD.sql       # Script SQL para crear el esquema de la base de datos
 └── README.md               # Documentación del proyecto

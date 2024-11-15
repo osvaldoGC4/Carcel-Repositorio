@@ -1,10 +1,7 @@
-import json
 from flask import Blueprint, request
 from aplicaciones.baseController import BaseController
-from common.encriptador import EncriptadorAES
 
 class CeldaController(BaseController):
-    operacionCrud = None
 
     def __init__(self, app):
         ## self.encriptar = EncriptadorAES()

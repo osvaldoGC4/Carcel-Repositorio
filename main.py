@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 import jwt
 
-from common.conexion import Conexion
 from aplicaciones.celda import CeldaController
 from aplicaciones.interno import InternoController
 from aplicaciones.actividad import ActividadController
