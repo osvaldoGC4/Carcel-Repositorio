@@ -1,4 +1,3 @@
-import json
 import pyodbc
 from common.conexion import Conexion
 from common.utiles import Utiles

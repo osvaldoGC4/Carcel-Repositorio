@@ -3,7 +3,7 @@ from flask import jsonify, request
 from common.utiles import Utiles
 from common.encriptador import EncriptadorAES
 from repositorios.IRepositorio import IRepositorio
-class BaseController:
+class BaseService:
     def __init__(self, entidad_nombre, clave="qwertyui12345678"):
         self.entidad_nombre = entidad_nombre
         self.encriptador = EncriptadorAES(clave)

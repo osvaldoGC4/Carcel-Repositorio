@@ -1,22 +1,84 @@
-from flask import Blueprint, request
-from aplicaciones.baseController import BaseController
+from models.visitante import Visitante
+from repositorios.IRepositorio import IRepositorio  # Importamos la interfaz
+from common.conexion import Conexion
+from common.encriptador import EncriptadorAES
+from common.utiles import Utiles
+import json
 
-class VisitanteRepositorio:
-    def __init__(self, app):
-        super().__init__('visitante')
-        visitante_blueprint = Blueprint('visitante', __name__)
-        visitante_blueprint.add_url_rule('/', view_func=self.getAll, methods=["GET"])
-        visitante_blueprint.add_url_rule('/<int:id>', view_func=self.getById, methods=["GET"])
-        visitante_blueprint.add_url_rule('/', view_func=self.create, methods=["POST"])
-        visitante_blueprint.add_url_rule('/<int:id>', view_func=self.update_route, methods=["PATCH"])
-        visitante_blueprint.add_url_rule('/<int:id>', view_func=self.delete_route, methods=["DELETE"])
-        app.register_blueprint(visitante_blueprint, url_prefix='/visitante')
+class VisitanteRepositorio(IRepositorio):
+    
+    def __init__(self):
+        self.conexion = Conexion()
+        clave="qwertyui12345678"
+        self.encriptador = EncriptadorAES(clave)
+        self.entidad_nombre = 'visitante'
 
-    def update_route(self, id):
-        extra_params = request.args.to_dict()
-        return self.update(id, extra_params)
+    def getAll(self):
+        data = []
+        try:
+            self.conexion.conectar()
+            data = self.conexion.execSPResult(f"sp_Select{self.entidad_nombre}", [0])
+        except Exception as e:
+            data = []
+        finally:
+            self.conexion.cerrar()
+        return data
+    
+    def getById(self, id: int):
+        data = []
+        try:
+            self.conexion.conectar()
+            data = self.conexion.execSPResult(f"sp_Select{self.entidad_nombre}", [id])
+        except Exception as e:
+            data = []
+        finally:
+            self.conexion.cerrar()
+        return data
 
-    def delete_route(self, id):
-        extra_params = request.args.to_dict()
-        print(extra_params)
-        return self.delete(id, extra_params)
+    def create(self, datos: dict):
+        data = []
+        try:
+            # No encriptar los valores que son fechas
+            datos = {
+                k: self.encriptador.encriptar(v) if isinstance(v, str) and not Utiles.is_date_format(v) else v
+                for k, v in datos.items()
+            }
+            entidad_json = json.dumps(datos)
+
+            self.conexion.conectar()
+            data = self.conexion.execSPResult(f"sp_Insert{self.entidad_nombre}", [entidad_json])
+        except Exception as e:
+            data = []
+        finally:
+            self.conexion.cerrar()
+        return data
+
+    def update(self, id: int, datos: dict):
+        data = []
+        try:
+            # No encriptar los valores que son fechas
+            datos = {
+                k: self.encriptador.encriptar(v) if isinstance(v, str) and not Utiles.is_date_format(v) else v
+                for k, v in datos.items()
+            }
+            entidad_json = json.dumps(datos)
+
+            self.conexion.conectar()
+            data = self.conexion.execSPResult(f"sp_Update{self.entidad_nombre}", [entidad_json, id])
+        except Exception as e:
+            data = []
+        finally:
+            self.conexion.cerrar()
+        return data
+    def delete(self, id: int):
+        data = []
+        try:
+            # No encriptar los valores que son fechas
+            where_clause = f'ID = {id}'
+            self.conexion.conectar()
+            data = self.conexion.execSP(f"sp_Delete{self.entidad_nombre}", [where_clause])
+        except Exception as e:
+            data = []
+        finally:
+            self.conexion.cerrar()
+        return data

@@ -2,7 +2,7 @@ import datetime
 import jwt
 from flask import Blueprint, request, jsonify
 
-class AuthController:
+class AuthService:
     def __init__(self, app):
         auth_blueprint = Blueprint('auth', __name__)
         auth_blueprint.add_url_rule('/token', view_func=self.token, methods=["POST"])

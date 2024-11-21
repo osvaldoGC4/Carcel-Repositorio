@@ -1,23 +1,31 @@
 from flask import Blueprint, request
-from aplicaciones.baseController import BaseController
-
-class InternoActividadController(BaseController):
-
+from servicios.base import BaseService
+from repositorios.internoActividad import InternoActividadRepositorio
+class InternoActividadController(BaseService):
+    repository = InternoActividadRepositorio()
     def __init__(self, app):
         super().__init__('internoActividad')
         internoActividad_blueprint = Blueprint('internoActividad', __name__)
-        internoActividad_blueprint.add_url_rule('/', view_func=self.getAll, methods=["GET"])
-        internoActividad_blueprint.add_url_rule('/<int:id>', view_func=self.getById, methods=["GET"])
-        internoActividad_blueprint.add_url_rule('/', view_func=self.create, methods=["POST"])
+        internoActividad_blueprint.add_url_rule('/', view_func=self.getAll_route, methods=["GET"])
+        internoActividad_blueprint.add_url_rule('/<int:id>', view_func=self.getById_route, methods=["GET"])
+        internoActividad_blueprint.add_url_rule('/', view_func=self.create_raoute, methods=["POST"])
         internoActividad_blueprint.add_url_rule('/<int:id>', view_func=self.update_route, methods=["PATCH"])
         internoActividad_blueprint.add_url_rule('/<int:id>', view_func=self.delete_route, methods=["DELETE"])
         app.register_blueprint(internoActividad_blueprint, url_prefix='/internoActividad')
 
+    def getAll_route(self):
+        return self.getAll(self.repository) # Este repositorio debe seguir la firma de la interfaz
      # Rutas de actualización y eliminación que admiten parámetros adicionales
     def update_route(self, id):
         extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
-        return self.update(id, extra_params)
+        return self.update(id, self.repository, extra_params)
 
     def delete_route(self, id):
         extra_params = request.args.to_dict()  # Captura cualquier parámetro extra en la URL
-        return self.delete(id, extra_params)
+        return self.delete(id, self.repository, extra_params)
+    
+    def getById_route(self, id):
+        return self.getById(id, self.repository)
+    
+    def create_raoute(self):
+        return self.create(self.repository)

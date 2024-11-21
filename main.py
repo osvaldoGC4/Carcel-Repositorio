@@ -13,7 +13,7 @@ from aplicaciones.delito import DelitoController
 from aplicaciones.internoActividad import InternoActividadController
 from aplicaciones.condena import CondenaController
 from aplicaciones.informeDisciplina import InformeDisciplinaController
-from aplicaciones.auth import AuthController
+from servicios.auth import AuthService
 from aplicaciones.reglasN import ReglasNController
 
 app = Flask(__name__)
@@ -51,7 +51,7 @@ InternoActividadController(app)
 InformeDisciplinaController(app)
 CondenaController(app)
 ReglasNController(app)
-AuthController(app)
+AuthService(app)
 
 if __name__ == "__main__":
     app.run('localhost', 4040)

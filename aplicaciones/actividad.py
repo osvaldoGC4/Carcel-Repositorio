@@ -1,7 +1,7 @@
 from flask import Blueprint, request
-from aplicaciones.baseController import BaseController
+from servicios.base import BaseService
 from repositorios.actividad import ActividadRepositorio
-class ActividadController(BaseController):
+class ActividadController(BaseService):
     repository = ActividadRepositorio()
     def __init__(self, app):
         super().__init__('actividad')
