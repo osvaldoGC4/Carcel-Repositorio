@@ -7,13 +7,13 @@ class AuthService:
         auth_blueprint = Blueprint('auth', __name__)
         auth_blueprint.add_url_rule('/token', view_func=self.token, methods=["POST"])
         app.register_blueprint(auth_blueprint, url_prefix='/auth')
-
+        self.key = app.config["SECRET_KEY"]
     def token(self):
         try:
             datos = request.json
             admin_user = 'admin_carcel'
             admin_password = 'Qwer.1234'
-            key = 'KJhisdy8787798udfsd56f4s5d4fsdf'
+            
 
             # Validación de usuario y contraseña
             if "User" not in datos or datos["User"] != admin_user:
@@ -27,7 +27,7 @@ class AuthService:
                     "Usuario": admin_user,
                     "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
                 },
-                key,
+                self.key,
                 algorithm="HS256"
             )
             return jsonify({"Token": encoded, "Response": "Ok"}), 200
